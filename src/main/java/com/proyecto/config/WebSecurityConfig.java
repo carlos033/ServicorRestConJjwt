@@ -11,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -37,15 +36,14 @@ import com.proyecto.servicios.ServiciosJwtUsuarios;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
-		@Autowired
-		private JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
-	
-		@Autowired
-		private ServiciosJwtUsuarios jwtUserDetailsService;
-	
-		@Autowired
-		  @Lazy
-		private JwtRequestFilter jwtRequestFilter;
+	@Autowired
+	private JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
+
+	@Autowired
+	private ServiciosJwtUsuarios jwtUserDetailsService;
+
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
 	public void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
@@ -70,11 +68,10 @@ public class WebSecurityConfig {
 		httpSecurity.cors().and().csrf().disable().authorizeRequests().antMatchers("/autenticacion/login").permitAll()
 				.anyRequest().authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).csrf().disable();
 
-		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		return httpSecurity.build();
-
 	}
 
 	@Bean
