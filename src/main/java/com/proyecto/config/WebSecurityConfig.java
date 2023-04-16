@@ -8,6 +8,7 @@ package com.proyecto.config;
 import java.util.Arrays;
 
 import org.modelmapper.ModelMapper;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 
 /**
  *
@@ -49,12 +53,11 @@ public class WebSecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
-	@Bean
 	public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.cors().and().csrf().disable().authorizeHttpRequests().antMatchers("/autenticacion/login").permitAll()
-				.anyRequest().authenticated().and().exceptionHandling()
-				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll().anyRequest()
+				.authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).csrf().disable();
 
 		return httpSecurity.build();
@@ -78,5 +81,18 @@ public class WebSecurityConfig {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+
+	@Bean
+	public OpenAPI customOpenAPI() {
+		return new OpenAPI()
+				.info(new Info().title("Servidor Medico").description("Descripción de tu API").version("1.0"));
+	}
+
+	@Bean
+	public GroupedOpenApi customApiDocs() {
+		return GroupedOpenApi.builder().group("Tu grupo de API").pathsToMatch("/**") // Cambiar a las rutas que quieras
+																						// documentar
+				.build();
 	}
 }
