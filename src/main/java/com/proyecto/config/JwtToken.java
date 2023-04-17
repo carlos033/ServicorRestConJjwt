@@ -56,13 +56,6 @@ public class JwtToken implements Serializable {
         return expiration.before(new Date());
     }
 
-    public boolean esMedico(String token) {
-        Claims claims = getAllClaimsFromToken(token);
-        @SuppressWarnings("unchecked")
-		Map<String, Object> userMap = (HashMap<String, Object>) claims.get("usuario");
-        return userMap.get("licencia") != null;
-    }
-
     public String generarToken(UserDetails userDetails, Logable user) {
         Map<String, Object> claims = new HashMap<>();
         Map<String, Object> userMap = new HashMap<>();

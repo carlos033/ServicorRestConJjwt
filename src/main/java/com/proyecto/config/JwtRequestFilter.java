@@ -5,13 +5,13 @@
  */
 package com.proyecto.config;
 
-import com.proyecto.servicios.ServiciosJwtUsuarios;
-import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +20,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.proyecto.servicios.ServiciosJwtUsuarios;
+
+import io.jsonwebtoken.JwtException;
 
 /**
  *
@@ -46,10 +50,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			jwtToken = requestTokenHeader.substring(7);
 			try {
 				identifier = jwtTokenUtil.obtenerIdentificadorDelToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				logger.error("No se pudo obtener el identificador del token JWT", e);
-			} catch (ExpiredJwtException e) {
-				logger.error("El token JWT ha expirado", e);
+			} catch (JwtException exception) {
+				logger.error("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
 			}
 		}
 		if (identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
