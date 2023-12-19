@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,17 +20,18 @@ import com.proyecto.repositorios.MedicoRepository;
 import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServicioJwtUsuario;
 
+import lombok.AllArgsConstructor;
+
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
 @Service
 public class ServiciosJwtUsuarios implements ServicioJwtUsuario {
 
-	@Autowired
 	private MedicoRepository medicoRepository;
 
-	@Autowired
 	private PacienteRepository pacienteRepository;
 
 	private UserDetails cargarMedicoPorIdentificador(String identificador) {

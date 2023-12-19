@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.excepciones.ExcepcionServicio;
@@ -24,22 +23,21 @@ import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServiciosCitaI;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
 @Service("ServiciosCitaI")
 @Transactional
 public class ServiciosCita implements ServiciosCitaI {
 
-	@Autowired
 	private CitaRepository repositorioC;
 
-	@Autowired
 	private MedicoRepository repositorioM;
 
-	@Autowired
 	private PacienteRepository repositorioP;
 
 	@Override

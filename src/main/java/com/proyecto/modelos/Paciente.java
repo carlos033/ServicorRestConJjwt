@@ -6,7 +6,6 @@
 package com.proyecto.modelos;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,11 +18,17 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Entity
 @Table(name = "paciente")
 public class Paciente implements Serializable, Logable {
@@ -47,77 +52,9 @@ public class Paciente implements Serializable, Logable {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
 	private List<Informe> informes;
 
-	public Paciente() {
-		this.informes = new ArrayList<>();
-		this.listaCitas = new ArrayList<>();
-	}
-
-	public Paciente(String nSS, String nombre, String password, Date fNacimiento, List<Cita> listaCitas,
-			List<Informe> informes) {
-		this.nSS = nSS;
-		this.nombre = nombre;
-		this.password = password;
-		this.fNacimiento = fNacimiento;
-		this.listaCitas = listaCitas;
-		this.informes = informes;
-	}
-
-	public String getnSS() {
-		return nSS;
-	}
-
-	public void setnSS(String nSS) {
-		this.nSS = nSS;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public Date getfNacimiento() {
-		return fNacimiento;
-	}
-
-	public void setfNacimiento(Date fNacimiento) {
-		this.fNacimiento = fNacimiento;
-	}
-
-	public List<Cita> getListaCitas() {
-		return listaCitas;
-	}
-
-	public void setListaCitas(List<Cita> listaCitas) {
-		this.listaCitas = listaCitas;
-	}
-
-	public List<Informe> getInformes() {
-		return informes;
-	}
-
-	public void setInformes(List<Informe> informes) {
-		this.informes = informes;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	@Override
 	public String getIdentifier() {
-		return getnSS();
+		return getNSS();
 	}
 
-	@Override
-	public String toString() {
-		return "Paciente{" + "nSS=" + nSS + ", nombre=" + nombre + ", password=" + password + ", fNacimiento="
-				+ fNacimiento + ", citas=" + listaCitas + ", informes=" + informes + '}';
-	}
 }

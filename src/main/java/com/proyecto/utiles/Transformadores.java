@@ -6,7 +6,6 @@
 package com.proyecto.utiles;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.proyecto.dto.CitaDTO;
@@ -23,14 +22,16 @@ import com.proyecto.modelos.Informe;
 import com.proyecto.modelos.Medico;
 import com.proyecto.modelos.Paciente;
 
+import lombok.AllArgsConstructor;
+
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
 @Component
 public class Transformadores {
-
-    @Autowired
+    
     private ModelMapper modelMapper;
 
     public Cita convertirAEntidadC(CitaDTO dTO) {

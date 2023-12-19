@@ -8,7 +8,6 @@ package com.proyecto.servicios;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +20,20 @@ import com.proyecto.repositorios.MedicoRepository;
 import com.proyecto.serviciosI.ServiciosMedicoI;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 /**
  *
  * @author ck
  */
-@Service("ServiciosMedicoI")
+@AllArgsConstructor
+@Service()
 public class ServiciosMedico implements ServiciosMedicoI {
 
-	@Autowired
 	private MedicoRepository repositorioM;
-	@Autowired
+
 	private HospitalRepository repositorioH;
-	@Autowired	
+
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override

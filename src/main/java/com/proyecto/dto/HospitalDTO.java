@@ -6,66 +6,32 @@
 package com.proyecto.dto;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class HospitalDTO implements Serializable {
 
-    private static final long serialVersionUID = 7L;
-    private String nombreHos;
-    private String poblacion;
-    private String numConsultas;
-    private List<MedicoDTO> listaMedicos;
+	private static final long serialVersionUID = 7L;
+	private String nombreHos;
+	private String poblacion;
+	private String numConsultas;
+	private List<MedicoDTO> listaMedicos;
 
-    public HospitalDTO() {
-        listaMedicos = new ArrayList<>();
-    }
+	public HospitalDTO(String nombreHos, String poblacion, List<MedicoDTO> listaMedicos, String numConsultas) {
+		this.nombreHos = nombreHos;
+		this.poblacion = poblacion;
+		this.listaMedicos = listaMedicos;
+		this.numConsultas = numConsultas;
+	}
 
-    public HospitalDTO(String nombreHos, String poblacion, List<MedicoDTO> listaMedicos, String numConsultas) {
-        this.nombreHos = nombreHos;
-        this.poblacion = poblacion;
-        this.listaMedicos = listaMedicos;
-        this.numConsultas = numConsultas;
-    }
-
-    public String getNumConsultas() {
-        return numConsultas;
-    }
-
-    public void setNumConsultas(String numConsultas) {
-        this.numConsultas = numConsultas;
-    }
-
-    public String getNombreHos() {
-        return nombreHos;
-    }
-
-    public void setNombreHos(String nombreHos) {
-        this.nombreHos = nombreHos;
-    }
-
-    public String getPoblacion() {
-        return poblacion;
-    }
-
-    public void setPoblacion(String poblacion) {
-        this.poblacion = poblacion;
-    }
-
-    public List<MedicoDTO> getListaMedicos() {
-        return listaMedicos;
-    }
-
-    public void setListaMedicos(List<MedicoDTO> listaMedicos) {
-        this.listaMedicos = listaMedicos;
-    }
-
-    @Override
-    public String toString() {
-        return "HospitalDTO{" + "nombreHos=" + nombreHos + ", poblacion=" + poblacion + ", listaMedicos=" + listaMedicos + ", numConsultas=" + numConsultas + '}';
-    }
 }

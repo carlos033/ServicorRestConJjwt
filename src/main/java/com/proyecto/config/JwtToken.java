@@ -46,8 +46,7 @@ public class JwtToken implements Serializable {
 	}
 
 	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims = getAllClaimsFromToken(token);
-		return claimsResolver.apply(claims);
+		return claimsResolver.apply(getAllClaimsFromToken(token));
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
@@ -62,15 +61,11 @@ public class JwtToken implements Serializable {
 	public String generarToken(UserDetails userDetails, Logable user) {
 		Map<String, Object> claims = new HashMap<>();
 		Map<String, Object> userMap = new HashMap<>();
-		Medico medico = null;
-		Paciente paciente = null;
-		if (user instanceof Medico) {
+		if (user instanceof Medico medico) {
 			userMap.put("licencia", user.getIdentifier());
-			medico = (Medico) user;
 			userMap.put("nombre", medico.getNombre());
-		} else if (user instanceof Paciente) {
+		} else if (user instanceof Paciente paciente) {
 			userMap.put("nss", user.getIdentifier());
-			paciente = (Paciente) user;
 			userMap.put("nombre", paciente.getNombre());
 		}
 		claims.put("usuario", userMap);
@@ -84,8 +79,7 @@ public class JwtToken implements Serializable {
 	}
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String identifier = obtenerIdentificadorDelToken(token);
-		return (identifier.equals(userDetails.getUsername()) && !aExpiradoElToken(token));
+		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername()) && !aExpiradoElToken(token));
 	}
 
 }

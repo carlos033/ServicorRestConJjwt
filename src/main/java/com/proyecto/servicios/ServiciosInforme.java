@@ -8,7 +8,6 @@ package com.proyecto.servicios;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.proyecto.excepciones.ExcepcionServicio;
@@ -21,77 +20,78 @@ import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServiciosInformeI;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 /**
  *
  * @author ck
  */
-@Service("ServiciosInformesI")
+@AllArgsConstructor
+@Service
 @Transactional
 public class ServiciosInforme implements ServiciosInformeI {
 
-    @Autowired
-    private InformeRepository repositorioI;
-    @Autowired
-    private PacienteRepository repositorioP;
-    @Autowired
-    private MedicoRepository repositorioM;
+	private InformeRepository repositorioI;
 
-    @Override
-    public List<Informe> buscarTodosI() {
-        return repositorioI.findAll();
-    }
+	private PacienteRepository repositorioP;
 
-    @Override
-    public void saveInformes(Informe informe) throws ExcepcionServicio {
-        repositorioI.save(informe);
-    }
+	private MedicoRepository repositorioM;
 
-    @Override
-    public void eliminarInforme(String nombre) throws ExcepcionServicio {
-        Optional<Informe> optInformes = repositorioI.findById(nombre);
-        if (!optInformes.isPresent()) {
-            throw new ExcepcionServicio("El nombre del informe no existe");
-        }
-        repositorioI.deleteById(nombre);
-    }
+	@Override
+	public List<Informe> buscarTodosI() {
+		return repositorioI.findAll();
+	}
 
-    @Override
-    public List<Informe> buscarInformesXPaciente(String nSS) throws ExcepcionServicio {
-        Optional<Paciente> optPaciente = repositorioP.findById(nSS);
-        if (!optPaciente.isPresent()) {
-            throw new ExcepcionServicio("El numero de SS no existe");
-        }
-        return repositorioI.buscarInformeXPaciente(nSS);
-    }
+	@Override
+	public void saveInformes(Informe informe) throws ExcepcionServicio {
+		repositorioI.save(informe);
+	}
 
-    @Override
-    public List<Informe> buscarInformesXMedico(String nLicencia) throws ExcepcionServicio {
-        Optional<Medico> optMedico = repositorioM.findById(nLicencia);
-        if (!optMedico.isPresent()) {
-            throw new ExcepcionServicio("El numero de Licencia no existe");
-        }
-        return repositorioI.buscarInformeXMedico(nLicencia);
-    }
+	@Override
+	public void eliminarInforme(String nombre) throws ExcepcionServicio {
+		Optional<Informe> optInformes = repositorioI.findById(nombre);
+		if (!optInformes.isPresent()) {
+			throw new ExcepcionServicio("El nombre del informe no existe");
+		}
+		repositorioI.deleteById(nombre);
+	}
 
-    @Override
-    public void eliminarTodosXPaciente(String nSS) throws ExcepcionServicio {
-        List<Informe> listaCitas = buscarInformesXPaciente(nSS);
-        repositorioI.deleteAllInBatch(listaCitas);
-    }
+	@Override
+	public List<Informe> buscarInformesXPaciente(String nSS) throws ExcepcionServicio {
+		Optional<Paciente> optPaciente = repositorioP.findById(nSS);
+		if (!optPaciente.isPresent()) {
+			throw new ExcepcionServicio("El numero de SS no existe");
+		}
+		return repositorioI.buscarInformeXPaciente(nSS);
+	}
 
-    @Override
-    public Informe crearInforme(Informe informe) throws ExcepcionServicio {
-        Optional<Medico> m = repositorioM.findById(informe.getMedico().getnLicencia());
-        Optional<Paciente> p = repositorioP.findById(informe.getPaciente().getnSS());
-        if (!m.isPresent()) {
-            throw new ExcepcionServicio("El numero de licencia no existe");
-        }
-        if (!p.isPresent()) {
-            throw new ExcepcionServicio("El numero de SS no existe");
-        }
-        informe.setPaciente(p.get());
-        informe.setMedico(m.get());
-        return this.repositorioI.save(informe);
-    }
+	@Override
+	public List<Informe> buscarInformesXMedico(String nLicencia) throws ExcepcionServicio {
+		Optional<Medico> optMedico = repositorioM.findById(nLicencia);
+		if (!optMedico.isPresent()) {
+			throw new ExcepcionServicio("El numero de Licencia no existe");
+		}
+		return repositorioI.buscarInformeXMedico(nLicencia);
+	}
+
+	@Override
+	public void eliminarTodosXPaciente(String nSS) throws ExcepcionServicio {
+		List<Informe> listaCitas = buscarInformesXPaciente(nSS);
+		repositorioI.deleteAllInBatch(listaCitas);
+	}
+
+	@Override
+	public Informe crearInforme(Informe informe) throws ExcepcionServicio {
+		Optional<Medico> m = repositorioM.findById(informe.getMedico().getnLicencia());
+		Optional<Paciente> p = repositorioP.findById(informe.getPaciente().getnSS());
+		if (!m.isPresent()) {
+			throw new ExcepcionServicio("El numero de licencia no existe");
+		}
+		if (!p.isPresent()) {
+			throw new ExcepcionServicio("El numero de SS no existe");
+		}
+		informe.setPaciente(p.get());
+		informe.setMedico(m.get());
+		return this.repositorioI.save(informe);
+	}
 }

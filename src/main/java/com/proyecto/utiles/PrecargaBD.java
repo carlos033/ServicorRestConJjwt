@@ -5,7 +5,6 @@
  */
 package com.proyecto.utiles;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.proyecto.excepciones.ExcepcionServicio;
@@ -13,15 +12,16 @@ import com.proyecto.modelos.Medico;
 import com.proyecto.servicios.ServiciosMedico;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
 @Component
 public class PrecargaBD {
-
-	@Autowired
+	
 	private ServiciosMedico sMedico;
 
 	@Transactional

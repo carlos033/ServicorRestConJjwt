@@ -7,35 +7,23 @@ package com.proyecto.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author ck
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class InformeMedicoDTO extends InformeDTO {
 
 	private static final long serialVersionUID = 4395919023616974988L;
 	@JsonIgnoreProperties("informes")
-    private PacienteDTO paciente;
-
-    public InformeMedicoDTO() {
-    }
-
-    public InformeMedicoDTO(PacienteDTO paciente, String url, String nombreInf) {
-        super(url, nombreInf);
-        this.paciente = paciente;
-    }
-
-    public PacienteDTO getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(PacienteDTO paciente) {
-        this.paciente = paciente;
-    }
-
-    @Override
-    public String toString() {
-        return "InformeMedicoDTO{" + "paciente=" + paciente + '}';
-    }
+	private PacienteDTO paciente;
 
 }
