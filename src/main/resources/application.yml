@@ -1,26 +1,26 @@
 jwt:
-  secret: mysecretkey
+   secret: mysecretkey
 logging:
-  level:
-    org:
-      hibernate:
-        type: trace
+   level:
+      org:
+         hibernate:
+            type: trace
 server:
-  error:
-    include-stacktrace: never
-  servlet:
-    context-path: /servidor
+   error:
+      include-stacktrace: never
+   servlet:
+      context-path: /servidor
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: ''
-    url: jdbc:mysql://localhost:3306/proyecto2?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC    
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
+   datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: ''
+      url: jdbc:mysql://localhost:3306/proyecto2?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+   jpa:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
-        type: trace
-    show-sql: true
+         ddl-auto: update
+      properties:
+         hibernate:
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            type: trace
+      show-sql: true

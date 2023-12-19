@@ -5,14 +5,14 @@
  */
 package com.proyecto.utiles;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Medico;
 import com.proyecto.servicios.ServiciosMedico;
+
+import jakarta.transaction.Transactional;
 
 /**
  *

@@ -5,15 +5,18 @@
  */
 package com.proyecto.servicios;
 
-import com.proyecto.excepciones.ExcepcionServicio;
-import com.proyecto.serviciosI.ServiciosHospitalI;
-import com.proyecto.repositorios.HospitalRepository;
-import com.proyecto.modelos.Hospital;
 import java.util.List;
 import java.util.Optional;
-import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.proyecto.excepciones.ExcepcionServicio;
+import com.proyecto.modelos.Hospital;
+import com.proyecto.repositorios.HospitalRepository;
+import com.proyecto.serviciosI.ServiciosHospitalI;
+
+import jakarta.transaction.Transactional;
 
 /**
  *

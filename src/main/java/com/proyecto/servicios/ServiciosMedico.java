@@ -8,8 +8,6 @@ package com.proyecto.servicios;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,8 @@ import com.proyecto.modelos.Paciente;
 import com.proyecto.repositorios.HospitalRepository;
 import com.proyecto.repositorios.MedicoRepository;
 import com.proyecto.serviciosI.ServiciosMedicoI;
+
+import jakarta.transaction.Transactional;
 
 /**
  *

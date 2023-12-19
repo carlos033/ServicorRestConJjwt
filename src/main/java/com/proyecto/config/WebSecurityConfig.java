@@ -8,15 +8,17 @@ package com.proyecto.config;
 import java.util.Arrays;
 
 import org.modelmapper.ModelMapper;
-import org.springdoc.core.GroupedOpenApi;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -34,8 +36,8 @@ import io.swagger.v3.oas.models.info.Info;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig {
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
+class WebSecurityConfig {
 
 	@Autowired
 	private JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
@@ -43,7 +45,7 @@ public class WebSecurityConfig {
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Bean
-	public BCryptPasswordEncoder passwordEncoder() {
+	BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
@@ -53,18 +55,22 @@ public class WebSecurityConfig {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
-	public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.cors().and().csrf().disable().authorizeHttpRequests().antMatchers("/autenticacion/login").permitAll()
-				.antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).csrf().disable();
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity.csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/autenticacion/login").permitAll()
+						.anyRequest().authenticated())
+				.exceptionHandling(
+						exceptionHandling -> exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+				.sessionManagement(
+						sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return httpSecurity.build();
 	}
 
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
+	CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList(new String[] { "*" }));
 		configuration.setAllowedMethods(
@@ -79,18 +85,22 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
+	ModelMapper modelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+		return modelMapper;
 	}
 
 	@Bean
-	public OpenAPI customOpenAPI() {
+	OpenAPI customOpenAPI() {
 		return new OpenAPI()
 				.info(new Info().title("Servidor Medico").description("Descripción de tu API").version("1.0"));
 	}
 
 	@Bean
-	public GroupedOpenApi customApiDocs() {
+	GroupedOpenApi customApiDocs() {
 		return GroupedOpenApi.builder().group("Tu grupo de API").pathsToMatch("/**") // Cambiar a las rutas que quieras
 																						// documentar
 				.build();

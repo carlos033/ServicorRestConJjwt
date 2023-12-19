@@ -5,10 +5,10 @@
  */
 package com.proyecto.controladores;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import java.util.Map;
 import java.util.Optional;
-
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,6 +34,8 @@ import com.proyecto.modelos.Paciente;
 import com.proyecto.servicios.ServiciosJwtUsuarios;
 import com.proyecto.servicios.ServiciosMedico;
 import com.proyecto.servicios.ServiciosPaciente;
+
+import jakarta.transaction.Transactional;
 
 /**
  *
@@ -59,7 +61,7 @@ public class AutenticacionController {
 	@Autowired
 	private ServiciosPaciente sPaciente;
 
-	@PostMapping("/login")
+	@GetMapping("/login")
 	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody Map<String, String> request)
 			throws Exception {
 		String identificador = request.get("identificador").toLowerCase();
@@ -85,9 +87,11 @@ public class AutenticacionController {
 	}
 
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().authorizeHttpRequests().antMatchers("/autenticacion/**").permitAll().anyRequest()
-				.authenticated().and().exceptionHandling().and().sessionManagement()
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		httpSecurity.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(requests -> requests.requestMatchers("/autenticacion/**").permitAll()
+						.anyRequest().authenticated())
+				.exceptionHandling(withDefaults())
+				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 	}
 
 	@Transactional

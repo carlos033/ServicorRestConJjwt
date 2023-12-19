@@ -5,12 +5,16 @@
  */
 package com.proyecto.utiles;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.proyecto.dto.CitaDTO;
 import com.proyecto.dto.HospitalDTO;
+import com.proyecto.dto.InformeCompletoDTO;
 import com.proyecto.dto.InformeDTO;
 import com.proyecto.dto.InformeMedicoDTO;
 import com.proyecto.dto.InformePacienteDTO;
-import com.proyecto.dto.InformeCompletoDTO;
 import com.proyecto.dto.MedicoDTO;
 import com.proyecto.dto.PacienteDTO;
 import com.proyecto.modelos.Cita;
@@ -18,9 +22,6 @@ import com.proyecto.modelos.Hospital;
 import com.proyecto.modelos.Informe;
 import com.proyecto.modelos.Medico;
 import com.proyecto.modelos.Paciente;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
