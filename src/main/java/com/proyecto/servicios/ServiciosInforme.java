@@ -83,7 +83,7 @@ public class ServiciosInforme implements ServiciosInformeI {
 	@Override
 	public Informe crearInforme(Informe informe) throws ExcepcionServicio {
 		Optional<Medico> m = repositorioM.findById(informe.getMedico().getnLicencia());
-		Optional<Paciente> p = repositorioP.findById(informe.getPaciente().getnSS());
+		Optional<Paciente> p = repositorioP.findById(informe.getPaciente().getNSS());
 		if (!m.isPresent()) {
 			throw new ExcepcionServicio("El numero de licencia no existe");
 		}

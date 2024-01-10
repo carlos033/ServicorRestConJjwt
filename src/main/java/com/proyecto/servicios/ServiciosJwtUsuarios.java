@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -41,14 +42,16 @@ public class ServiciosJwtUsuarios implements ServicioJwtUsuario {
 		}
 		Medico m = optMedico.get();
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		return new org.springframework.security.core.userdetails.User(m.getnLicencia(), m.getPassword(), authorities);
+		return new User(m.getnLicencia(), m.getPassword(), authorities);
 	}
 
 	private UserDetails cargarPacientePorIdentificador(String identificador) {
 		Optional<Paciente> optPaciente = pacienteRepository.findById(identificador);
+		if (!optPaciente.isPresent()) {
+			throw new UsernameNotFoundException("Usuario no encontrado con identificador: " + identificador);
+		}
 		Paciente p = optPaciente.get();
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		return new org.springframework.security.core.userdetails.User(p.getnSS(), p.getPassword(), authorities);
+		return new User(p.getNSS(), p.getPassword(), new ArrayList<>());
 	}
 
 	@Override

@@ -51,10 +51,7 @@ public class ServiciosPaciente implements ServiciosPacienteI {
 
 	@Override
 	public Optional<Paciente> buscarPaciente(String nSS) throws ExcepcionServicio {
-		Optional<Paciente> optPaciente = repositorioP.findById(nSS);
-		if (!optPaciente.isPresent()) {
-			throw new ExcepcionServicio("El numero de SS no existe");
-		}
-		return optPaciente;
+		return Optional.ofNullable(
+				repositorioP.findById(nSS).orElseThrow(() -> new ExcepcionServicio("El numero de SS no existe")));
 	}
 }

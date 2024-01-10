@@ -48,8 +48,8 @@ public class ServiciosCita implements ServiciosCitaI {
 	@Override
 	public Cita crearCita(Cita cita) throws ExcepcionServicio {
 		Date fechaDHoy = new Date();
-		Date fecha = cita.getfHoraCita();
-		String nss = cita.getPaciente().getnSS();
+		Date fecha = cita.getFHoraCita();
+		String nss = cita.getPaciente().getNSS();
 		String nLicencia = cita.getMedico().getnLicencia();
 		List<Cita> citasPacienteEsaHora = repositorioC.buscarCitaXPacienteYHora(nss, fecha);
 		List<Cita> citasMedicoEsaHora = repositorioC.buscarCitaXMedicoYHora(nLicencia, fecha);
