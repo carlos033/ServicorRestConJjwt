@@ -36,6 +36,7 @@ import com.proyecto.servicios.ServiciosPaciente;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 
 /**
  *
@@ -93,7 +94,7 @@ public class AutenticacionController {
 	}
 
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf(csrf -> csrf.disable())
+		httpSecurity.csrf(CsrfConfigurer::disable)
 				.authorizeHttpRequests(requests -> requests.requestMatchers("/autenticacion/**").permitAll()
 						.anyRequest().authenticated())
 				.exceptionHandling(withDefaults())

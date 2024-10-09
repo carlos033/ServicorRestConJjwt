@@ -1,17 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.proyecto.config;
 
 import java.io.Serializable;
+import java.security.SecureRandom;
+import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,13 +19,11 @@ import com.proyecto.modelos.Medico;
 import com.proyecto.modelos.Paciente;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
-/**
- *
- * @author ck
- */
 @Component
 public class JwtToken implements Serializable {
 
@@ -34,8 +31,22 @@ public class JwtToken implements Serializable {
 
 	public static final long JWT_TOKEN_VALIDITY = 30 * 60 * 60;
 
-	@Value("${jwt.secret}")
-	private String secret;
+	private SecretKey secretKey;
+
+	@PostConstruct
+	public void init() throws Exception {
+		this.secretKey = generateSecretKey();
+	}
+
+	private SecretKey generateSecretKey() throws Exception {
+		KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
+		keyGen.init(256, new SecureRandom());
+		return keyGen.generateKey();
+	}
+
+	public SecretKey getSecretKey() {
+		return secretKey;
+	}
 
 	public String obtenerIdentificadorDelToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
@@ -50,7 +61,9 @@ public class JwtToken implements Serializable {
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+		return Jwts
+		        .parser().verifyWith(getSecretKey()).build().parseSignedClaims(token)
+		        .getPayload();
 	}
 
 	private Boolean aExpiradoElToken(String token) {
@@ -72,14 +85,23 @@ public class JwtToken implements Serializable {
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 
-	private String doGenerateToken(Map<String, Object> claims, String subject) {
-		return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-				.signWith(SignatureAlgorithm.HS512, secret).compact();
+	private String doGenerateToken(Map<String, Object> userClaims, String subject) {
+		SecretKey signingKey = Keys.hmacShaKeyFor(getSecretKey().getEncoded());
+
+		JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and()
+		        .issuer("exampleIssuer").subject(subject)
+		        .issuedAt(Date.from(Instant.now()))
+		        .expiration(Date.from(Instant.now().plusSeconds(JWT_TOKEN_VALIDITY)))
+		        .signWith(signingKey);
+
+		userClaims.entrySet()
+		        .forEach(entry -> builder.claim(entry.getKey(), entry.getValue()));
+
+		return builder.compact();
 	}
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername()) && !aExpiradoElToken(token));
+		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername())
+		        && !aExpiradoElToken(token));
 	}
-
 }
