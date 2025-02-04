@@ -1,13 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.config;
 
 import java.io.IOException;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,37 +30,33 @@ import lombok.AllArgsConstructor;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-	private JwtToken jwtTokenUtil;
-	private ApplicationContext applicationContext;
+	private final JwtToken jwtTokenUtil;
+	private final ServiciosJwtUsuarios jwtUserDetailsService;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-			throws ServletException, IOException {
-		final String requestTokenHeader = request.getHeader("Authorization");
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			String jwtToken = requestTokenHeader.substring(7);
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+		final String authHeader = request.getHeader("Authorization");
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			String jwtToken = authHeader.substring(7);
 			try {
 				String identifier = jwtTokenUtil.obtenerIdentificadorDelToken(jwtToken);
 				if (identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-					ServiciosJwtUsuarios jwtUserDetailsService = applicationContext.getBean(ServiciosJwtUsuarios.class);
 					UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identifier);
-
-					SecurityContextHolder.getContext()
-							.setAuthentication(jwtTokenUtil.validateToken(jwtToken, userDetails)
-									? buildAuthenticationToken(userDetails, request)
-									: null);
+					UsernamePasswordAuthenticationToken authToken = buildAuthenticationToken(userDetails, request);
+					SecurityContextHolder.getContext().setAuthentication(authToken);
 				}
 			} catch (JwtException exception) {
 				logger.error("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+				response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
 			}
 		}
 		chain.doFilter(request, response);
 	}
 
-	private UsernamePasswordAuthenticationToken buildAuthenticationToken(UserDetails userDetails,
-			HttpServletRequest request) {
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
-				null, userDetails.getAuthorities());
+	private UsernamePasswordAuthenticationToken buildAuthenticationToken(UserDetails userDetails, HttpServletRequest request) {
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
 		authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

@@ -1,14 +1,12 @@
 package com.proyecto.config;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,13 +33,7 @@ public class JwtToken implements Serializable {
 
 	@PostConstruct
 	public void init() throws Exception {
-		this.secretKey = generateSecretKey();
-	}
-
-	private SecretKey generateSecretKey() throws Exception {
-		KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-		keyGen.init(256, new SecureRandom());
-		return keyGen.generateKey();
+		this.secretKey = Jwts.SIG.HS256.key().build();
 	}
 
 	public SecretKey getSecretKey() {
@@ -61,9 +53,7 @@ public class JwtToken implements Serializable {
 	}
 
 	private Claims getAllClaimsFromToken(String token) {
-		return Jwts
-		        .parser().verifyWith(getSecretKey()).build().parseSignedClaims(token)
-		        .getPayload();
+		return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
 	}
 
 	private Boolean aExpiradoElToken(String token) {
@@ -88,20 +78,14 @@ public class JwtToken implements Serializable {
 	private String doGenerateToken(Map<String, Object> userClaims, String subject) {
 		SecretKey signingKey = Keys.hmacShaKeyFor(getSecretKey().getEncoded());
 
-		JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and()
-		        .issuer("exampleIssuer").subject(subject)
-		        .issuedAt(Date.from(Instant.now()))
-		        .expiration(Date.from(Instant.now().plusSeconds(JWT_TOKEN_VALIDITY)))
-		        .signWith(signingKey);
+		JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and().issuer("exampleIssuer").subject(subject).issuedAt(Date.from(Instant.now())).expiration(Date.from(Instant.now().plusSeconds(JWT_TOKEN_VALIDITY))).signWith(signingKey);
 
-		userClaims.entrySet()
-		        .forEach(entry -> builder.claim(entry.getKey(), entry.getValue()));
+		userClaims.entrySet().forEach(entry -> builder.claim(entry.getKey(), entry.getValue()));
 
 		return builder.compact();
 	}
 
 	public Boolean validateToken(String token, UserDetails userDetails) {
-		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername())
-		        && !aExpiradoElToken(token));
+		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername()) && !aExpiradoElToken(token));
 	}
 }

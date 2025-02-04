@@ -1,15 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.servicios;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
 
@@ -34,11 +29,11 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ServiciosCita implements ServiciosCitaI {
 
-	private CitaRepository repositorioC;
+	private final CitaRepository repositorioC;
 
-	private MedicoRepository repositorioM;
+	private final MedicoRepository repositorioM;
 
-	private PacienteRepository repositorioP;
+	private final PacienteRepository repositorioP;
 
 	@Override
 	public void save(Cita cita) {
@@ -53,48 +48,39 @@ public class ServiciosCita implements ServiciosCitaI {
 		String nLicencia = cita.getMedico().getnLicencia();
 		List<Cita> citasPacienteEsaHora = repositorioC.buscarCitaXPacienteYHora(nss, fecha);
 		List<Cita> citasMedicoEsaHora = repositorioC.buscarCitaXMedicoYHora(nLicencia, fecha);
-		if (citasPacienteEsaHora.size() > 0) {
+		if (citasPacienteEsaHora.isEmpty()) {
 			throw new ExcepcionServicio("Usted ya tiene una cita en esa fecha y hora");
 		}
-		if (citasMedicoEsaHora.size() > 0) {
+		if (citasMedicoEsaHora.isEmpty()) {
 			throw new ExcepcionServicio("El medico no tiene hueco a esa hora ese dia");
 		}
 		if (fecha.before(fechaDHoy)) {
 			throw new ExcepcionServicio("La fecha debe ser posterior a hoy");
 		}
-		Optional<Medico> m = repositorioM.findById(nLicencia);
-		Optional<Paciente> p = repositorioP.findById(nss);
-		if (!m.isPresent()) {
-			throw new ExcepcionServicio("El numero de licencia no existe");
-		}
-		if (!p.isPresent()) {
-			throw new ExcepcionServicio("El numero de SS no existe");
-		}
-		cita.setPaciente(p.get());
-		cita.setMedico(m.get());
+		Medico medico = repositorioM.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio("El número de licencia no existe"));
+
+		Paciente paciente = repositorioP.findById(nss).orElseThrow(() -> new ExcepcionServicio("El número de SS no existe"));
+
+		cita.setPaciente(paciente);
+		cita.setMedico(medico);
 		return this.repositorioC.save(cita);
 	}
 
 	@Override
 	public List<Cita> buscarTodasC() {
-		List<Cita> listaCitas = repositorioC.findAll();
-		return listaCitas;
+		return repositorioC.findAll();
 	}
 
 	@Override
 	public void eliminarCita(int id) throws ExcepcionServicio {
-		try {
-			buscarXId(id);
-		} catch (ExcepcionServicio ex) {
-			Logger.getLogger(ServiciosCita.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		buscarXId(id);
 		repositorioC.deleteById(id);
 	}
 
 	@Override
 	public List<Cita> buscarXPaciente(String nSS) throws ExcepcionServicio {
 		List<Cita> listaCitas = repositorioC.buscarCitaXPaciente(nSS);
-		if (listaCitas == null) {
+		if (listaCitas.isEmpty()) {
 			throw new ExcepcionServicio("el nSS no existe");
 		}
 		return listaCitas;
@@ -103,7 +89,7 @@ public class ServiciosCita implements ServiciosCitaI {
 	@Override
 	public List<Cita> buscarXMedico(String nLicencia) throws ExcepcionServicio {
 		List<Cita> listaCitas = repositorioC.buscarCitaXMedico(nLicencia);
-		if (listaCitas == null) {
+		if (listaCitas.isEmpty()) {
 			throw new ExcepcionServicio("el numero de licencia no existe");
 		}
 		return listaCitas;
@@ -112,7 +98,7 @@ public class ServiciosCita implements ServiciosCitaI {
 	@Override
 	public void eliminarTodasXPaciente(String nSS) throws ExcepcionServicio {
 		List<Cita> listaCitas = buscarXPaciente(nSS);
-		if (listaCitas == null) {
+		if (listaCitas.isEmpty()) {
 			throw new ExcepcionServicio("El numero de SS no existe");
 		}
 		repositorioC.deleteAllInBatch(listaCitas);
@@ -120,21 +106,11 @@ public class ServiciosCita implements ServiciosCitaI {
 
 	@Override
 	public Medico buscarMiMedico(String nSS) throws ExcepcionServicio {
-		Optional<Medico> optMedico = repositorioC.buscarMmedico(nSS);
-		if (!optMedico.isPresent()) {
-			throw new ExcepcionServicio("Paciente con nSS no existe o no tiene citas");
-		}
-		Medico medico = optMedico.get();
-		return medico;
+		return repositorioC.buscarMmedico(nSS).orElseThrow(() -> new ExcepcionServicio("Paciente con NSS no existe o no tiene citas"));
 	}
 
 	@Override
 	public Cita buscarXId(int id) throws ExcepcionServicio {
-		Optional<Cita> optCita = repositorioC.findById(id);
-		if (!optCita.isPresent()) {
-			throw new ExcepcionServicio("La id no existe");
-		}
-		Cita cita = optCita.get();
-		return cita;
+		return repositorioC.findById(id).orElseThrow(() -> new ExcepcionServicio("La ID no existe"));
 	}
 }

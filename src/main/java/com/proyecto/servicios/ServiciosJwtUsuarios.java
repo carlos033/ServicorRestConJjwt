@@ -1,15 +1,12 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.servicios;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,27 +28,24 @@ import lombok.AllArgsConstructor;
 @Service
 public class ServiciosJwtUsuarios implements ServicioJwtUsuario {
 
-	private MedicoRepository medicoRepository;
+	private final MedicoRepository medicoRepository;
 
-	private PacienteRepository pacienteRepository;
+	private final PacienteRepository pacienteRepository;
+
+	private UserDetails crearUsuario(String identificador, String password, String rol) {
+		List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(rol));
+		return new User(identificador, password, authorities);
+	}
 
 	private UserDetails cargarMedicoPorIdentificador(String identificador) {
-		Optional<Medico> optMedico = medicoRepository.findById(identificador);
-		if (!optMedico.isPresent()) {
-			throw new UsernameNotFoundException("Usuario no encontrado con identificador: " + identificador);
-		}
-		Medico m = optMedico.get();
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		return new User(m.getnLicencia(), m.getPassword(), authorities);
+		Medico medico = medicoRepository.findById(identificador).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con identificador: " + identificador)); // 🔹 Código más limpio
+		return crearUsuario(medico.getnLicencia(), medico.getPassword(), "ROLE_MEDICO");
 	}
 
 	private UserDetails cargarPacientePorIdentificador(String identificador) {
-		Optional<Paciente> optPaciente = pacienteRepository.findById(identificador);
-		if (!optPaciente.isPresent()) {
-			throw new UsernameNotFoundException("Usuario no encontrado con identificador: " + identificador);
-		}
-		Paciente p = optPaciente.get();
-		return new User(p.getNSS(), p.getPassword(), new ArrayList<>());
+		Paciente paciente = pacienteRepository.findById(identificador).orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado con identificador: " + identificador)); // 🔹 Código más limpio
+		return crearUsuario(paciente.getNSS(), paciente.getPassword(), "ROLE_PACIENTE");
+
 	}
 
 	@Override
@@ -61,6 +55,6 @@ public class ServiciosJwtUsuarios implements ServicioJwtUsuario {
 		} else if (identificador.startsWith("es")) {
 			return cargarPacientePorIdentificador(identificador);
 		}
-		return null;
+		throw new UsernameNotFoundException("Identificador no válido: " + identificador);
 	}
 }
