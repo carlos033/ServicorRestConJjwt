@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.controladores;
 
@@ -9,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.proyecto.dto.CitaDTO;
 import com.proyecto.dto.InformeMedicoDTO;
 import com.proyecto.dto.MedicoDTO;
 import com.proyecto.dto.PacienteDTO;
-import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Medico;
 import com.proyecto.serviciosI.ServiciosCitaI;
 import com.proyecto.serviciosI.ServiciosInformeI;
@@ -42,96 +39,66 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/medicos")
 public class MedicoJpaController {
 
-	private Transformadores transformador;
+	private final Transformadores transformador;
 
-	private ServiciosMedicoI sMedico;
+	private final ServiciosMedicoI sMedico;
 
-	private ServiciosCitaI sCita;
+	private final ServiciosCitaI sCita;
 
-	private ServiciosInformeI sInformes;
+	private final ServiciosInformeI sInformes;
 
 	@PostMapping
 
 	@ResponseStatus(HttpStatus.CREATED)
-	public MedicoDTO aniadirMedico(@Valid @RequestBody MedicoDTO medicoDTO) {
+	public ResponseEntity<MedicoDTO> aniadirMedico(@Valid @RequestBody MedicoDTO medicoDTO) {
 		Medico medico = transformador.convertirAEntidadM(medicoDTO);
 		sMedico.saveMedico(medico);
-		return transformador.convertirADTOM(medico);
+		return ResponseEntity.status(HttpStatus.CREATED).body(transformador.convertirADTOM(medico));
 	}
 
 	@DeleteMapping("/{nLicencia}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void eliminarMedico(@PathVariable("nLicencia") String nLicencia) {
-		try {
-			sMedico.eliminarMedico(nLicencia);
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<Void> eliminarMedico(@PathVariable String nLicencia) {
+		sMedico.eliminarMedico(nLicencia);
+		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping("/{nLicencia}")
-	public MedicoDTO buscarMedico(@PathVariable("nLicencia") String nLicencia) {
-		try {
-			return sMedico.buscarMedico(nLicencia).map(transformador::convertirADTOM)
-					.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Médico no encontrado"));
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<MedicoDTO> buscarMedico(@PathVariable String nLicencia) {
+		return ResponseEntity.ok(transformador.convertirADTOM(sMedico.buscarMedico(nLicencia)));
 	}
 
 	@GetMapping
-	public List<MedicoDTO> listMedicos() {
-		return sMedico.buscarTodosM().stream().map(transformador::convertirADTOM).collect(Collectors.toList());
+	public ResponseEntity<List<MedicoDTO>> listMedicos() {
+		return ResponseEntity.ok(sMedico.buscarTodosM().stream().map(transformador::convertirADTOM).collect(Collectors.toList()));
 	}
 
 	@GetMapping("/{nLicencia}/citas")
-	public List<CitaDTO> buscarCitaXMedico(@PathVariable("nLicencia") String nLicencia) {
-		try {
-			return sCita.buscarXMedico(nLicencia).stream().map(transformador::convertirADTOC)
-					.collect(Collectors.toList());
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<List<CitaDTO>> buscarCitaXMedico(@PathVariable String nLicencia) {
+		return ResponseEntity.ok(sCita.buscarXMedico(nLicencia).stream().map(transformador::convertirADTOC).collect(Collectors.toList()));
+
 	}
 
 	@GetMapping("/{nLicencia}/pacientes")
-	public List<PacienteDTO> buscarPacienteXMedico(@PathVariable("nLicencia") String nLicencia) {
-		try {
-			return sMedico.BuscarPacientesXMedico(nLicencia).stream().map(transformador::convertirADTOP)
-					.collect(Collectors.toList());
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<List<PacienteDTO>> buscarPacienteXMedico(@PathVariable String nLicencia) {
+		return ResponseEntity.ok(sMedico.BuscarPacientesXMedico(nLicencia).stream().map(transformador::convertirADTOP).collect(Collectors.toList()));
+
 	}
 
 	@GetMapping("/{especialidad}/{nombrehos}/hospital")
-	public List<MedicoDTO> BuscarMedicoXEspecialidad(@PathVariable("especialidad") String especialidad,
-			@PathVariable("nombrehos") String nombrehos) {
-		try {
-			return sMedico.BuscarMedicoXEspecialidad(especialidad, nombrehos).stream()
-					.map(transformador::convertirADTOM).collect(Collectors.toList());
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<List<MedicoDTO>> BuscarMedicoXEspecialidad(@PathVariable String especialidad, @PathVariable String nombrehos) {
+		return ResponseEntity.ok(sMedico.BuscarMedicoXEspecialidad(especialidad, nombrehos).stream().map(transformador::convertirADTOM).collect(Collectors.toList()));
+
 	}
 
 	@GetMapping("/{nombrehos}/hospital")
-	public List<MedicoDTO> BuscarMedicosXHospital(@PathVariable("nombrehos") String nombrehos) {
-		try {
-			return sMedico.BuscarMedicosXHospital(nombrehos).stream().map(transformador::convertirADTOM)
-					.collect(Collectors.toList());
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<List<MedicoDTO>> BuscarMedicosXHospital(@PathVariable String nombrehos) {
+		return ResponseEntity.ok(sMedico.BuscarMedicosXHospital(nombrehos).stream().map(transformador::convertirADTOM).collect(Collectors.toList()));
+
 	}
 
 	@GetMapping("/{nLicencia}/informes")
-	public List<InformeMedicoDTO> buscarInformesXPaciente(@PathVariable("nLicencia") String nLicencia) {
-		try {
-			return sInformes.buscarInformesXMedico(nLicencia).stream().map(transformador::convertirADTOIM)
-					.collect(Collectors.toList());
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, ex.getMessage());
-		}
+	public ResponseEntity<List<InformeMedicoDTO>> buscarInformesXPaciente(@PathVariable String nLicencia) {
+		return ResponseEntity.ok(sInformes.buscarInformesXMedico(nLicencia).stream().map(transformador::convertirADTOIM).collect(Collectors.toList()));
+
 	}
 }

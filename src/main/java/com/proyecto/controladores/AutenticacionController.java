@@ -49,26 +49,24 @@ public class AutenticacionController {
 
 	@PostMapping("/login")
 	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginRequest request) throws Exception {
-		String identificador = request.getIdentificador().toLowerCase();
-		String password = request.getPassword();
+		String identificador = request.identificador().toLowerCase();
+		String password = request.password();
 		authenticate(identificador, password);
 		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identificador);
 
-		String token = "";
-
-		if (identificador.toUpperCase().startsWith("M")) {
-			token = jwtToken.generarToken(userDetails, sMedico.buscarMedico(identificador));
-		} else if (identificador.toUpperCase().startsWith("ES")) {
-			token = jwtToken.generarToken(userDetails, sPaciente.buscarPaciente(identificador));
-		} else {
-			throwInvalidIdentifierException();
-		}
+		String token = generateToken(identificador, userDetails);
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}
 
-	private String throwInvalidIdentifierException() {
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador no válido");
+	private String generateToken(String identificador, UserDetails userDetails) {
+		if (identificador.toUpperCase().startsWith("M")) {
+			return jwtToken.generarToken(userDetails, sMedico.buscarMedico(identificador));
+		} else if (identificador.toUpperCase().startsWith("ES")) {
+			return jwtToken.generarToken(userDetails, sPaciente.buscarPaciente(identificador));
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador no válido");
+		}
 	}
 
 	@Transactional
