@@ -4,6 +4,7 @@
 package com.proyecto.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,9 +36,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		final String authHeader = request.getHeader("Authorization");
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			String jwtToken = authHeader.substring(7);
+		final Optional<String> optAuthHeader = Optional.ofNullable(request.getHeader("Authorization"));
+		if (optAuthHeader.isPresent() && optAuthHeader.get().startsWith("Bearer ")) {
+			String jwtToken = optAuthHeader.get().substring(7);
 			try {
 				String identifier = jwtTokenUtil.obtenerIdentificadorDelToken(jwtToken);
 				if (identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {

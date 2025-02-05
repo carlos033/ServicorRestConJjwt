@@ -50,11 +50,10 @@ public class ServiciosJwtUsuarios implements ServicioJwtUsuario {
 
 	@Override
 	public UserDetails loadUserByUsername(String identificador) {
-		if (identificador.startsWith("m")) {
-			return cargarMedicoPorIdentificador(identificador);
-		} else if (identificador.startsWith("es")) {
-			return cargarPacientePorIdentificador(identificador);
-		}
-		throw new UsernameNotFoundException("Identificador no válido: " + identificador);
+		return switch (identificador) {
+		case String s when s.startsWith("m") -> cargarMedicoPorIdentificador(s);
+		case String s when s.startsWith("es") -> cargarPacientePorIdentificador(s);
+		default -> throw new UsernameNotFoundException("Identificador no válido");
+		};
 	}
 }

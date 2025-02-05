@@ -3,10 +3,12 @@
  */
 package com.proyecto.servicios;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Cita;
@@ -17,7 +19,6 @@ import com.proyecto.repositorios.MedicoRepository;
 import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServiciosCitaI;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
@@ -42,24 +43,24 @@ public class ServiciosCita implements ServiciosCitaI {
 
 	@Override
 	public Cita crearCita(Cita cita) throws ExcepcionServicio {
-		Date fechaDHoy = new Date();
-		Date fecha = cita.getFHoraCita();
+		LocalDateTime fechaDHoy = LocalDateTime.now();
+		LocalDateTime fecha = cita.getFHoraCita();
 		String nss = cita.getPaciente().getNSS();
 		String nLicencia = cita.getMedico().getnLicencia();
 		List<Cita> citasPacienteEsaHora = repositorioC.buscarCitaXPacienteYHora(nss, fecha);
 		List<Cita> citasMedicoEsaHora = repositorioC.buscarCitaXMedicoYHora(nLicencia, fecha);
 		if (citasPacienteEsaHora.isEmpty()) {
-			throw new ExcepcionServicio("Usted ya tiene una cita en esa fecha y hora");
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "Usted ya tiene una cita en esa fecha y hora");
 		}
 		if (citasMedicoEsaHora.isEmpty()) {
-			throw new ExcepcionServicio("El medico no tiene hueco a esa hora ese dia");
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El medico no tiene hueco a esa hora ese dia");
 		}
-		if (fecha.before(fechaDHoy)) {
-			throw new ExcepcionServicio("La fecha debe ser posterior a hoy");
+		if (fecha.isBefore(fechaDHoy)) {
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "La fecha debe ser posterior a hoy");
 		}
-		Medico medico = repositorioM.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio("El número de licencia no existe"));
+		Medico medico = repositorioM.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de licencia no existe"));
 
-		Paciente paciente = repositorioP.findById(nss).orElseThrow(() -> new ExcepcionServicio("El número de SS no existe"));
+		Paciente paciente = repositorioP.findById(nss).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de SS no existe"));
 
 		cita.setPaciente(paciente);
 		cita.setMedico(medico);
@@ -78,39 +79,44 @@ public class ServiciosCita implements ServiciosCitaI {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Cita> buscarXPaciente(String nSS) throws ExcepcionServicio {
 		List<Cita> listaCitas = repositorioC.buscarCitaXPaciente(nSS);
 		if (listaCitas.isEmpty()) {
-			throw new ExcepcionServicio("el nSS no existe");
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "el nSS no existe");
 		}
 		return listaCitas;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Cita> buscarXMedico(String nLicencia) throws ExcepcionServicio {
 		List<Cita> listaCitas = repositorioC.buscarCitaXMedico(nLicencia);
 		if (listaCitas.isEmpty()) {
-			throw new ExcepcionServicio("el numero de licencia no existe");
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "el numero de licencia no existe");
 		}
 		return listaCitas;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public void eliminarTodasXPaciente(String nSS) throws ExcepcionServicio {
 		List<Cita> listaCitas = buscarXPaciente(nSS);
 		if (listaCitas.isEmpty()) {
-			throw new ExcepcionServicio("El numero de SS no existe");
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe");
 		}
 		repositorioC.deleteAllInBatch(listaCitas);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Medico buscarMiMedico(String nSS) throws ExcepcionServicio {
-		return repositorioC.buscarMmedico(nSS).orElseThrow(() -> new ExcepcionServicio("Paciente con NSS no existe o no tiene citas"));
+		return repositorioC.buscarMmedico(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "Paciente con NSS no existe o no tiene citas"));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Cita buscarXId(int id) throws ExcepcionServicio {
-		return repositorioC.findById(id).orElseThrow(() -> new ExcepcionServicio("La ID no existe"));
+		return repositorioC.findById(id).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "La ID no existe"));
 	}
 }

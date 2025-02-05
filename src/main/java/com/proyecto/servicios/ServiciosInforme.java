@@ -1,14 +1,13 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.servicios;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Informe;
@@ -19,7 +18,6 @@ import com.proyecto.repositorios.MedicoRepository;
 import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServiciosInformeI;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
@@ -38,6 +36,7 @@ public class ServiciosInforme implements ServiciosInformeI {
 	private MedicoRepository repositorioM;
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Informe> buscarTodosI() {
 		return repositorioI.findAll();
 	}
@@ -49,32 +48,28 @@ public class ServiciosInforme implements ServiciosInformeI {
 
 	@Override
 	public void eliminarInforme(String nombre) throws ExcepcionServicio {
-		Optional<Informe> optInformes = repositorioI.findById(nombre);
-		if (!optInformes.isPresent()) {
-			throw new ExcepcionServicio("El nombre del informe no existe");
-		}
+		repositorioI.findById(nombre).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El nombre del informe no existe"));
 		repositorioI.deleteById(nombre);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Informe> buscarInformesXPaciente(String nSS) throws ExcepcionServicio {
-		Optional<Paciente> optPaciente = repositorioP.findById(nSS);
-		if (!optPaciente.isPresent()) {
-			throw new ExcepcionServicio("El numero de SS no existe");
-		}
+		repositorioP.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
+
 		return repositorioI.buscarInformeXPaciente(nSS);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Informe> buscarInformesXMedico(String nLicencia) throws ExcepcionServicio {
-		Optional<Medico> optMedico = repositorioM.findById(nLicencia);
-		if (!optMedico.isPresent()) {
-			throw new ExcepcionServicio("El numero de Licencia no existe");
-		}
+		repositorioM.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
+
 		return repositorioI.buscarInformeXMedico(nLicencia);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public void eliminarTodosXPaciente(String nSS) throws ExcepcionServicio {
 		List<Informe> listaCitas = buscarInformesXPaciente(nSS);
 		repositorioI.deleteAllInBatch(listaCitas);
@@ -82,16 +77,11 @@ public class ServiciosInforme implements ServiciosInformeI {
 
 	@Override
 	public Informe crearInforme(Informe informe) throws ExcepcionServicio {
-		Optional<Medico> m = repositorioM.findById(informe.getMedico().getnLicencia());
-		Optional<Paciente> p = repositorioP.findById(informe.getPaciente().getNSS());
-		if (!m.isPresent()) {
-			throw new ExcepcionServicio("El numero de licencia no existe");
-		}
-		if (!p.isPresent()) {
-			throw new ExcepcionServicio("El numero de SS no existe");
-		}
-		informe.setPaciente(p.get());
-		informe.setMedico(m.get());
+		Medico medico = repositorioM.findById(informe.getMedico().getnLicencia()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
+		Paciente paciente = repositorioP.findById(informe.getPaciente().getNSS()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
+
+		informe.setPaciente(paciente);
+		informe.setMedico(medico);
 		return this.repositorioI.save(informe);
 	}
 }

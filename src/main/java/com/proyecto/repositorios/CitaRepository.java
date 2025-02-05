@@ -3,7 +3,7 @@
  */
 package com.proyecto.repositorios;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,10 +36,10 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
 	public List<Cita> buscarCitaXMedico(@Param("nLicencia") String nLicencia);
 
 	@Query("Select c from Cita c where c.paciente.nSS= :nss and c.fHoraCita = :fecha")
-	public List<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") Date fecha);
+	public List<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
 
 	@Query("Select c from Cita c where c.medico.nLicencia = :nLicencia and c.fHoraCita = :fecha")
-	public List<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") Date fecha);
+	public List<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
 
 	@Query(SQL_BUSCAR_MEDICO_CABECERA)
 	public Optional<Medico> buscarMmedico(@Param("nSS") String nSS);

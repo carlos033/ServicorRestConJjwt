@@ -1,0 +1,7 @@
+.settings
+*.MF
+META-INF
+classes
+/*.classpath
+/*.factorypath
+/*.project

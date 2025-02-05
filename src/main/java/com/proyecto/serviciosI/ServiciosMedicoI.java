@@ -6,7 +6,6 @@
 package com.proyecto.serviciosI;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Medico;
@@ -24,7 +23,7 @@ public interface ServiciosMedicoI {
 
 	public void eliminarMedico(String nLicencia) throws ExcepcionServicio;
 
-	public Optional<Medico> buscarMedico(String nLicencia) throws ExcepcionServicio;
+	public Medico buscarMedico(String nLicencia) throws ExcepcionServicio;
 
 	public List<Paciente> BuscarPacientesXMedico(String nLicencia) throws ExcepcionServicio;
 

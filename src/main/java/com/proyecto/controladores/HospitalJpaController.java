@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.controladores;
 
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.proyecto.dto.HospitalDTO;
 import com.proyecto.excepciones.ExcepcionServicio;
@@ -51,12 +48,8 @@ public class HospitalJpaController {
 
 	@DeleteMapping("/{nombre}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void eliminarHospital(@PathVariable("nombre") String nombreHos) {
-		try {
-			sHospital.eliminarHospital(nombreHos);
-		} catch (ExcepcionServicio ex) {
-			throw new ResponseStatusException(HttpStatus.NO_CONTENT, "Hospital no encontrado");
-		}
+	public void eliminarHospital(@PathVariable String nombre) throws ExcepcionServicio {
+		sHospital.eliminarHospital(nombre);
 	}
 
 	@GetMapping
@@ -65,8 +58,7 @@ public class HospitalJpaController {
 	}
 
 	@GetMapping("{nombre}")
-	public HospitalDTO buscarHospital(@PathVariable("nombre") String nombre) throws ExcepcionServicio {
-		return sHospital.buscarHospital(nombre).map(transformador::convertirADTOH)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NO_CONTENT, "Hospital no encontrado"));
+	public HospitalDTO buscarHospital(@PathVariable String nombre) throws ExcepcionServicio {
+		return transformador.convertirADTOH(sHospital.buscarHospital(nombre));
 	}
 }

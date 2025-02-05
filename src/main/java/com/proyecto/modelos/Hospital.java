@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.modelos;
 
@@ -16,8 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
@@ -25,7 +26,10 @@ import lombok.NoArgsConstructor;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@ToString(exclude = "listaMedicos")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @Entity
 @Table(name = "hospital")
 public class Hospital implements Serializable {
@@ -41,8 +45,7 @@ public class Hospital implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "nomero_consultas")
 	private String numConsultas;
-	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH,
-			CascadeType.MERGE }, mappedBy = "hospital")
+	@OneToMany(cascade = { CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE }, mappedBy = "hospital")
 	private List<Medico> listaMedicos;
 
 }

@@ -1,22 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.servicios;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Paciente;
 import com.proyecto.repositorios.PacienteRepository;
 import com.proyecto.serviciosI.ServiciosPacienteI;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
@@ -33,6 +31,7 @@ public class ServiciosPaciente implements ServiciosPacienteI {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Paciente> buscarTodosP() {
 		return repositorioP.findAll();
 	}
@@ -50,8 +49,8 @@ public class ServiciosPaciente implements ServiciosPacienteI {
 	}
 
 	@Override
-	public Optional<Paciente> buscarPaciente(String nSS) throws ExcepcionServicio {
-		return Optional.ofNullable(
-				repositorioP.findById(nSS).orElseThrow(() -> new ExcepcionServicio("El numero de SS no existe")));
+	@Transactional(readOnly = true)
+	public Paciente buscarPaciente(String nSS) throws ExcepcionServicio {
+		return repositorioP.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
 	}
 }

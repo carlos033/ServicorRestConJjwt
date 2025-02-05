@@ -5,10 +5,10 @@
  */
 package com.proyecto.serviciosI;
 
+import java.util.List;
+
 import com.proyecto.excepciones.ExcepcionServicio;
 import com.proyecto.modelos.Paciente;
-import java.util.List;
-import java.util.Optional;
 
 /**
  *
@@ -22,5 +22,5 @@ public interface ServiciosPacienteI {
 
     public void eliminarPaciente(String nSS) throws ExcepcionServicio;
 
-    public Optional<Paciente> buscarPaciente(String nSS) throws ExcepcionServicio;
+	public Paciente buscarPaciente(String nSS) throws ExcepcionServicio;
 }

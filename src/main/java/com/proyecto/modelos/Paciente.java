@@ -1,12 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.proyecto.modelos;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.Basic;
@@ -19,16 +17,22 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author ck
  */
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = { "listaCitas", "informes" })
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "paciente")
 public class Paciente implements Serializable, Logable {
@@ -46,7 +50,7 @@ public class Paciente implements Serializable, Logable {
 	@Basic(optional = false)
 	@Column(name = "f_nacimiento")
 	@Temporal(TemporalType.DATE)
-	private Date fNacimiento;
+	private LocalDate fNacimiento;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
 	private List<Cita> listaCitas;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "paciente")
