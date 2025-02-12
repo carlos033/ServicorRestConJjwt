@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: tu_nombre
+      changes:
+        - createTable:
+            tableName: cita
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: f_hora_cita
+                  type: DATETIME(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nss
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: n_licencia
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK_cita_paciente
+            baseTableName: cita
+            baseColumnNames: nss
+            referencedTableName: paciente
+            referencedColumnNames: nss
+        - addForeignKeyConstraint:
+            constraintName: FK_cita_medico
+            baseTableName: cita
+            baseColumnNames: n_licencia
+            referencedTableName: medico
+            referencedColumnNames: n_licencia

@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changelog01-hospital.yml
+  - include:
+      file: db/changelog/changelog02-paciente.yml
+  - include:
+      file: db/changelog/changelog03-medico.yml
+  - include:
+      file: db/changelog/changelog04-cita.yml
+  - include:
+      file: db/changelog/changelog05-informe.yml
+

@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: tu_nombre
+      changes:
+        - createTable:
+            tableName: informes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nombre_inf
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: nss
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: n_licencia
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: FK_informe_paciente
+            baseTableName: informes
+            baseColumnNames: nss
+            referencedTableName: paciente
+            referencedColumnNames: nss
+        - addForeignKeyConstraint:
+            constraintName: FK_informe_medico
+            baseTableName: informes
+            baseColumnNames: n_licencia
+            referencedTableName: medico
+            referencedColumnNames: n_licencia

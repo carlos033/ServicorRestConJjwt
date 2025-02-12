@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: tu_nombre
+      changes:
+        - createTable:
+            tableName: paciente
+            columns:
+              - column:
+                  name: nss
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nombre
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: f_nacimiento
+                  type: DATE
+                  constraints:
+                    nullable: false

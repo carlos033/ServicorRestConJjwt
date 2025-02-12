@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: tu_nombre
+      changes:
+        - createTable:
+            tableName: medico
+            columns:
+              - column:
+                  name: n_licencia
+                  type: VARCHAR(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nombre
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: especialidad
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: consulta
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hospital_id  # 🔥 Nombre correcto de la FK
+                  type: BIGINT
+
+        - addForeignKeyConstraint:
+            constraintName: FK_medico_hospital
+            baseTableName: medico
+            baseColumnNames: hospital_id  # 🔥 Debe coincidir con el nombre en `medico`
+            referencedTableName: hospital
+            referencedColumnNames: id  # 🔥 Se referencia `id`, la PK de `hospital`

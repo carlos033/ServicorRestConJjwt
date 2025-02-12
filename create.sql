@@ -1,8 +1,58 @@
-create table cita (id integer not null auto_increment, f_hora_cita datetime(6) not null, n_licencia varchar(255) not null, nss varchar(255) not null, primary key (id)) engine=InnoDB
-create table hospital (nombre_hos varchar(255) not null, poblacion varchar(255) not null, primary key (nombre_hos)) engine=InnoDB
-create table informes (nombre_inf varchar(255) not null, url varchar(255) not null, n_licencia varchar(255) not null, nss varchar(255) not null, primary key (nombre_inf)) engine=InnoDB
-create table medico (n_licencia varchar(255) not null, consulta integer not null, especialidad varchar(255) not null, nombre varchar(255) not null, password varchar(255) not null, nombre_hos varchar(255), primary key (n_licencia)) engine=InnoDB
-create table paciente (nss varchar(255) not null, f_nacimiento date not null, nombre varchar(255) not null, password varchar(255), primary key (nss)) engine=InnoDB
+-- 🔹 Crear tabla HOSPITAL con ID autoincremental
+CREATE TABLE hospital (
+    id BIGINT NOT NULL AUTO_INCREMENT, 
+    nombre_hos VARCHAR(255) NOT NULL UNIQUE, 
+    poblacion VARCHAR(255) NOT NULL, 
+    numero_consultas INT NOT NULL,  
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
+
+-- 🔹 Crear tabla PACIENTE
+CREATE TABLE paciente (
+    nss VARCHAR(255) NOT NULL, 
+    f_nacimiento DATE NOT NULL, 
+    nombre VARCHAR(255) NOT NULL, 
+    password VARCHAR(255), 
+    PRIMARY KEY (nss)
+) ENGINE=InnoDB;
+
+-- 🔹 Crear tabla MEDICO con referencia correcta a HOSPITAL (usando ID)
+CREATE TABLE medico (
+    n_licencia VARCHAR(255) NOT NULL, 
+    consulta INT NOT NULL, 
+    especialidad VARCHAR(255) NOT NULL, 
+    nombre VARCHAR(255) NOT NULL, 
+    password VARCHAR(255) NOT NULL, 
+    hospital_id BIGINT,
+    PRIMARY KEY (n_licencia),
+    CONSTRAINT FK_medico_hospital FOREIGN KEY (hospital_id) REFERENCES hospital (id) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- 🔹 Crear tabla CITA
+CREATE TABLE cita (
+    id INT NOT NULL AUTO_INCREMENT, 
+    f_hora_cita DATETIME(6) NOT NULL, 
+    n_licencia VARCHAR(255) NOT NULL, 
+    nss VARCHAR(255) NOT NULL, 
+    PRIMARY KEY (id), 
+    CONSTRAINT UK_medico_cita UNIQUE (n_licencia, f_hora_cita), 
+    CONSTRAINT UK_paciente_cita UNIQUE (nss, f_hora_cita),
+    CONSTRAINT FK_cita_medico FOREIGN KEY (n_licencia) REFERENCES medico (n_licencia) ON DELETE CASCADE,
+    CONSTRAINT FK_cita_paciente FOREIGN KEY (nss) REFERENCES paciente (nss) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- 🔹 Crear tabla INFORMES con ID autoincremental
+CREATE TABLE informes (
+    id BIGINT NOT NULL AUTO_INCREMENT, 
+    nombre_inf VARCHAR(255) NOT NULL, 
+    url VARCHAR(255) NOT NULL UNIQUE, 
+    n_licencia VARCHAR(255) NOT NULL, 
+    nss VARCHAR(255) NOT NULL, 
+    PRIMARY KEY (id), 
+    CONSTRAINT FK_informe_medico FOREIGN KEY (n_licencia) REFERENCES medico (n_licencia) ON DELETE CASCADE, 
+    CONSTRAINT FK_informe_paciente FOREIGN KEY (nss) REFERENCES paciente (nss) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 alter table cita add constraint UK_medico_cita unique (n_licencia, f_hora_cita)
 alter table cita add constraint UK_paciente_cita unique (nss, f_hora_cita)
 alter table informes add constraint UK_qoa74294agc7t9wfmaohci4l5 unique (url)

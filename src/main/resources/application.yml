@@ -16,9 +16,12 @@ spring:
       url: jdbc:mysql://localhost:3306/proyecto2?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
    jpa:
       hibernate:
-         ddl-auto: update
+         ddl-auto: none
       properties:
          hibernate:
             dialect: org.hibernate.dialect.MySQL8Dialect
             type: trace
       show-sql: true
+   liquibase:
+      change-log: classpath:db/changelog/databaseChangeLog.yml
+      enabled: true  

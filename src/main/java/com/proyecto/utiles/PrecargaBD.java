@@ -5,9 +5,9 @@ package com.proyecto.utiles;
 
 import org.springframework.stereotype.Component;
 
-import com.proyecto.excepciones.ExcepcionServicio;
-import com.proyecto.modelos.Medico;
-import com.proyecto.servicios.ServiciosMedico;
+import com.application.serviceImpl.ServiciosMedico;
+import com.domain.exception.ExcepcionServicio;
+import com.domain.model.Medico;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
