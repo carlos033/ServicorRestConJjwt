@@ -5,13 +5,10 @@ package com.application.serviceImpl;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.application.service.ServiciosPacienteI;
 import com.domain.dto.PacienteDTO;
-import com.domain.exception.ExcepcionServicio;
-import com.domain.model.Paciente;
 import com.infrastructure.adaptador.AdaptadorRepositoryPaciente;
 
 import lombok.AllArgsConstructor;
