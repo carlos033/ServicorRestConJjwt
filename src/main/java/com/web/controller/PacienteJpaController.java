@@ -39,7 +39,7 @@ public class PacienteJpaController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Void> aniadirPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
 		sPaciente.savePaciente(pacienteDTO);
-		URI location = URI.create("/medicos/" + pacienteDTO.nss());
+		URI location = URI.create("/pacientes/" + pacienteDTO.nss());
 		return ResponseEntity.created(location).build();
 	}
 

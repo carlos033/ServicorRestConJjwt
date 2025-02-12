@@ -5,9 +5,8 @@ package com.proyecto.utiles;
 
 import org.springframework.stereotype.Component;
 
-import com.application.serviceImpl.ServiciosMedico;
-import com.domain.exception.ExcepcionServicio;
-import com.domain.model.Medico;
+import com.domain.dto.MedicoDTO;
+import com.infrastructure.adaptador.AdaptadorRepositoryMedico;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -20,15 +19,14 @@ import lombok.AllArgsConstructor;
 @Component
 public class PrecargaBD {
 
-	private ServiciosMedico sMedico;
+	private AdaptadorRepositoryMedico adaptador;
 
 	@Transactional
 	public void precargarBaseDeDatos() {
-		try {
-			sMedico.buscarMedico("M1");
-		} catch (ExcepcionServicio ex) {
-			Medico m = new Medico("M1", "Admin", "Administrador", 0, "1234", null, null, null);
-			sMedico.saveMedico(m);
+		MedicoDTO dto = adaptador.buscarMedico("M1");
+		if (dto == null) {
+			MedicoDTO m = new MedicoDTO("M1", "Admin", "Administrador", 0, "1234", null, null, null);
+			adaptador.saveMedico(m);
 		}
 	}
 

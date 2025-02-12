@@ -27,7 +27,7 @@ public interface MappersHospital {
 	MedicoDTO toDTOMedico(Medico paciente);
 
 	@InheritInverseConfiguration
-	Hospital toDTOHospital(HospitalDTO dto);
+	Hospital toEntityHospital(HospitalDTO dto);
 
 	@InheritInverseConfiguration
 	Medico toEntityPaciente(MedicoDTO dto);

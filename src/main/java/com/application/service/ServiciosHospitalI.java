@@ -1,14 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service;
 
 import java.util.List;
 
-import com.domain.exception.ExcepcionServicio;
-import com.domain.model.Hospital;
+import com.domain.dto.HospitalDTO;
 
 /**
  *
@@ -16,11 +13,12 @@ import com.domain.model.Hospital;
  */
 public interface ServiciosHospitalI {
 
-    public List<Hospital> buscarTodosH();
+	List<HospitalDTO> buscarTodosH();
 
-    public void save(Hospital hospital1);
+	long save(HospitalDTO dto);
 
-    public void eliminarHospital(String nombre) throws ExcepcionServicio;
+	void eliminarHospital(long id);
 
-	public Hospital buscarHospital(String nombre) throws ExcepcionServicio;
+	HospitalDTO buscarHospital(long id);
+
 }

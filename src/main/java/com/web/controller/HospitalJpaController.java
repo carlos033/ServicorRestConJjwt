@@ -3,10 +3,9 @@
  */
 package com.web.controller;
 
+import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.application.service.ServiciosHospitalI;
-import com.application.utiles.Transformadores;
 import com.domain.dto.HospitalDTO;
 import com.domain.exception.ExcepcionServicio;
-import com.domain.model.Hospital;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -34,30 +31,29 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/hospitales")
 public class HospitalJpaController {
 
-	private Transformadores transformador;
-
 	private ServiciosHospitalI sHospital;
 
 	@PostMapping
 	public ResponseEntity<HospitalDTO> aniadirHospital(@Valid @RequestBody HospitalDTO hospitalDto) {
-		Hospital hospital1 = transformador.convertirAEntidadH(hospitalDto);
-		sHospital.save(hospital1);
-		return ResponseEntity.status(HttpStatus.CREATED).body(transformador.convertirADTOH(hospital1));
+		long id = sHospital.save(hospitalDto);
+		URI location = URI.create("/hospitales/" + id);
+
+		return ResponseEntity.created(location).build();
 	}
 
 	@DeleteMapping("/{nombre}")
-	public ResponseEntity<Void> eliminarHospital(@PathVariable String nombre) throws ExcepcionServicio {
-		sHospital.eliminarHospital(nombre);
+	public ResponseEntity<Void> eliminarHospital(@PathVariable long id) throws ExcepcionServicio {
+		sHospital.eliminarHospital(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping
 	public ResponseEntity<List<HospitalDTO>> listarhospitales() {
-		return ResponseEntity.ok(sHospital.buscarTodosH().stream().map(transformador::convertirADTOH).collect(Collectors.toList()));
+		return ResponseEntity.ok(sHospital.buscarTodosH());
 	}
 
 	@GetMapping("{nombre}")
-	public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable String nombre) throws ExcepcionServicio {
-		return ResponseEntity.ok(transformador.convertirADTOH(sHospital.buscarHospital(nombre)));
+	public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable long id) throws ExcepcionServicio {
+		return ResponseEntity.ok(sHospital.buscarHospital(id));
 	}
 }
