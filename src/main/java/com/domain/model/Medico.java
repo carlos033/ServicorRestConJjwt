@@ -35,7 +35,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name = "medico")
-public class Medico implements Serializable, Logable {
+public class Medico implements Serializable {
 
 	private static final long serialVersionUID = 3L;
 	@Id
@@ -61,9 +61,4 @@ public class Medico implements Serializable, Logable {
 	private List<Cita> listaCitas;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medico")
 	private List<Informe> listaInformes;
-
-	@Override
-	public String getIdentifier() {
-		return getNumLicencia();
-	}
 }

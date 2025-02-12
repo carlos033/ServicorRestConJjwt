@@ -35,7 +35,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name = "paciente")
-public class Paciente implements Serializable, Logable {
+public class Paciente implements Serializable {
 
 	private static final long serialVersionUID = 4L;
 	@Id
@@ -55,10 +55,4 @@ public class Paciente implements Serializable, Logable {
 	private List<Cita> listaCitas;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "paciente")
 	private List<Informe> listaInformes;
-
-	@Override
-	public String getIdentifier() {
-		return getNss();
-	}
-
 }
