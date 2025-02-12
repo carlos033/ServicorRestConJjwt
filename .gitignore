@@ -6,3 +6,4 @@ classes
 /*.factorypath
 /*.project
 maven-archiver
+target/
