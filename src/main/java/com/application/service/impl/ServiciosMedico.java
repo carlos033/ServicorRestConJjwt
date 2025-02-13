@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
-package com.application.serviceImpl;
+package com.application.service.impl;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.application.service.ServiciosMedicoI;
 import com.domain.dto.MedicoDTO;
 import com.domain.exception.ExcepcionServicio;
-import com.infrastructure.adaptador.AdaptadorRepositoryMedico;
+import com.infrastructure.adaptador.impl.AdaptadorRepositoryMedico;
 
 import lombok.AllArgsConstructor;
 
@@ -53,4 +53,10 @@ public class ServiciosMedico implements ServiciosMedicoI {
 	public List<MedicoDTO> buscarMedicosXHospital(long hospital) throws ExcepcionServicio {
 		return adaptador.buscarMedicosXHospital(hospital);
 	}
+
+	@Override
+	public MedicoDTO buscarMiMedico(String nSS) {
+		return adaptador.buscarMiMedico(nSS);
+	}
+
 }

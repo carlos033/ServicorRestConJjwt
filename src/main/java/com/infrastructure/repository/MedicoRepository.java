@@ -4,6 +4,8 @@
 package com.infrastructure.repository;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,6 +19,12 @@ import com.domain.model.Paciente;
  */
 
 public interface MedicoRepository extends JpaRepository<Medico, String> {
+	String SQL_BUSCAR_MEDICO_CABECERA = """
+	        SELECT m FROM Medico m
+	        JOIN m.listaCitas medicocitas
+	        JOIN medicocitas.paciente p
+	        WHERE p.nSS = :nSS AND m.especialidad = 'Atencion primaria'
+	        """;
 
 	String SQL_BUSCAR_PACIENTES_POR_MEDICO = """
 	        SELECT p
@@ -46,4 +54,6 @@ public interface MedicoRepository extends JpaRepository<Medico, String> {
 	@Query(SQL_BUSCAR_MEDICOS_POR_HOSPITAL)
 	public List<Medico> buscarMedicosXHospital(@Param("idHospital") long idHospital);
 
+	@Query(SQL_BUSCAR_MEDICO_CABECERA)
+	public Optional<Medico> buscarMmedico(@Param("nSS") String nSS);
 }

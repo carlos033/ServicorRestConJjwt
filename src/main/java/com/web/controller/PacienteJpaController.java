@@ -56,7 +56,11 @@ public class PacienteJpaController {
 
 	@GetMapping("/{nSS}")
 	public ResponseEntity<PacienteDTO> buscarPaciente(@RequestParam String nSS) {
-		return ResponseEntity.ok(sPaciente.buscarPaciente(nSS));
+		PacienteDTO dto = sPaciente.buscarPaciente(nSS);
+		if (dto == null) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(dto);
 	}
 
 	@GetMapping("/{nLicencia}/pacientes")

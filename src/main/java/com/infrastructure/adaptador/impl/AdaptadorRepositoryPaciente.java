@@ -1,4 +1,4 @@
-package com.infrastructure.adaptador;
+package com.infrastructure.adaptador.impl;
 
 import java.util.List;
 
@@ -16,27 +16,29 @@ import com.infrastructure.repository.PacienteRepository;
 
 import lombok.AllArgsConstructor;
 
+@Transactional
 @Component
 @AllArgsConstructor
 public class AdaptadorRepositoryPaciente {
-	private MappersPacientes mapperPaciente;
+	private final MappersPacientes mapperPaciente;
 
-	private PacienteRepository pacienteRepository;
+	private final PacienteRepository pacienteRepository;
 
-	private MedicoRepository medicoRepository;
+	private final MedicoRepository medicoRepository;
 
-	private BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	public List<PacienteDTO> buscarTodosP() {
 		return pacienteRepository.findAll().stream().map(paciente -> mapperPaciente.toDTOPaciente(paciente)).toList();
 	}
 
 	public void eliminarPaciente(String nSS) {
-		pacienteRepository.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
+		if (!pacienteRepository.existsById(nSS)) {
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de SS no existe");
+		}
 		pacienteRepository.deleteById(nSS);
 	}
 
-	@Transactional
 	public void savePaciente(PacienteDTO dto) {
 		Paciente paciente = mapperPaciente.toEntityPaciente(dto);
 		paciente.setPassword(passwordEncoder.encode(dto.password()));
@@ -44,7 +46,7 @@ public class AdaptadorRepositoryPaciente {
 	}
 
 	public PacienteDTO buscarPaciente(String nSS) throws ExcepcionServicio {
-		return mapperPaciente.toDTOPaciente(pacienteRepository.findById(nSS).get());
+		return mapperPaciente.toDTOPaciente(pacienteRepository.findById(nSS).orElse(null));
 	}
 
 	public List<PacienteDTO> buscarPacientesXMedico(String nLicencia) {

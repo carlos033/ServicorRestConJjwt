@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
-package com.application.serviceImpl;
+package com.application.service.impl;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.application.service.ServiciosPacienteI;
 import com.domain.dto.PacienteDTO;
-import com.infrastructure.adaptador.AdaptadorRepositoryPaciente;
+import com.infrastructure.adaptador.impl.AdaptadorRepositoryPaciente;
 
 import lombok.AllArgsConstructor;
 

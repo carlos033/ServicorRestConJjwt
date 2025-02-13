@@ -1,4 +1,4 @@
-package com.infrastructure.adaptador;
+package com.infrastructure.adaptador.impl;
 
 import java.util.List;
 
@@ -16,37 +16,38 @@ import com.infrastructure.repository.MedicoRepository;
 
 import lombok.AllArgsConstructor;
 
+@Transactional
 @Component
 @AllArgsConstructor
 public class AdaptadorRepositoryMedico {
 
-	private MappersMedicos mapperMedico;
+	private final MappersMedicos mapperMedico;
 
-	private MedicoRepository medicoRepository;
+	private final MedicoRepository medicoRepository;
 
-	private HospitalRepository hospitalRepository;
+	private final HospitalRepository hospitalRepository;
 
-	private BCryptPasswordEncoder passwordEncoder;
+	private final BCryptPasswordEncoder passwordEncoder;
 
 	public List<MedicoDTO> buscarTodosM() {
 		return medicoRepository.findAll().stream().map(medico -> mapperMedico.toDTOMedico(medico)).toList();
 	}
 
-	@Transactional
 	public String saveMedico(MedicoDTO dto) {
 		Medico medico = mapperMedico.toEntityMedico(dto);
 		medico.setPassword(passwordEncoder.encode(medico.getPassword()));
-		medicoRepository.save(medico);
-		return medico.getNumLicencia();
+		return medicoRepository.save(medico).getNumLicencia();
 	}
 
 	public void eliminarMedico(String nLicencia) {
-		medicoRepository.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
+		if (!medicoRepository.existsById(nLicencia)) {
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de Licencia no existe");
+		}
 		medicoRepository.deleteById(nLicencia);
 	}
 
 	public MedicoDTO buscarMedico(String nLicencia) {
-		return mapperMedico.toDTOMedico(medicoRepository.findById(nLicencia).get());
+		return mapperMedico.toDTOMedico(medicoRepository.findById(nLicencia).orElse(null));
 	}
 
 	public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long idHospital) throws ExcepcionServicio {
@@ -64,5 +65,9 @@ public class AdaptadorRepositoryMedico {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos en el hospital");
 		}
 		return listaMedicoDTO;
+	}
+
+	public MedicoDTO buscarMiMedico(String nSS) {
+		return mapperMedico.toDTOMedico(medicoRepository.buscarMmedico(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "Paciente con NSS no existe o no tiene citas")));
 	}
 }

@@ -26,4 +26,6 @@ public interface ServiciosMedicoI {
 
 	List<MedicoDTO> buscarMedicosXHospital(long hospital) throws ExcepcionServicio;
 
+	MedicoDTO buscarMiMedico(String nSS);
+
 }

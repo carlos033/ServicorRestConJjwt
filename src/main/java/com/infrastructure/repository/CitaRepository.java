@@ -5,7 +5,6 @@ package com.infrastructure.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,20 +12,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.domain.model.Cita;
-import com.domain.model.Medico;
 
 /**
  *
  * @author ck
  */
-public interface CitaRepository extends JpaRepository<Cita, Integer> {
-
-	String SQL_BUSCAR_MEDICO_CABECERA = """
-	        SELECT m FROM Medico m
-	        JOIN m.listaCitas medicocitas
-	        JOIN medicocitas.paciente p
-	        WHERE p.nSS = :nSS AND m.especialidad = 'Atencion primaria'
-	        """;
+public interface CitaRepository extends JpaRepository<Cita, Long> {
 
 	@EntityGraph(attributePaths = { "paciente", "medico" })
 	@Query("Select c from Cita c where c.paciente.nSS= :nss")
@@ -40,8 +31,5 @@ public interface CitaRepository extends JpaRepository<Cita, Integer> {
 
 	@Query("Select c from Cita c where c.medico.nLicencia = :nLicencia and c.fHoraCita = :fecha")
 	public List<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
-
-	@Query(SQL_BUSCAR_MEDICO_CABECERA)
-	public Optional<Medico> buscarMmedico(@Param("nSS") String nSS);
 
 }

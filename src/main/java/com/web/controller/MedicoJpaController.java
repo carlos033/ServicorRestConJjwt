@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.application.service.ServiciosMedicoI;
 import com.domain.dto.MedicoDTO;
+import com.domain.exception.ExcepcionServicio;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,11 @@ public class MedicoJpaController {
 
 	@GetMapping("/{nLicencia}")
 	public ResponseEntity<MedicoDTO> buscarMedico(@PathVariable String nLicencia) {
-		return ResponseEntity.ok(sMedico.buscarMedico(nLicencia));
+		MedicoDTO dto = sMedico.buscarMedico(nLicencia);
+		if (dto == null) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(dto);
 	}
 
 	@GetMapping
@@ -66,5 +71,10 @@ public class MedicoJpaController {
 	@GetMapping("/hospital/{idHospital}")
 	public ResponseEntity<List<MedicoDTO>> buscarMedicosXHospital(@PathVariable long idHospital) {
 		return ResponseEntity.ok(sMedico.buscarMedicosXHospital(idHospital));
+	}
+
+	@GetMapping("/cabecera/{nSS}")
+	public ResponseEntity<MedicoDTO> buscarMiMedico(@PathVariable String nSS) throws ExcepcionServicio {
+		return ResponseEntity.ok(sMedico.buscarMiMedico(nSS));
 	}
 }

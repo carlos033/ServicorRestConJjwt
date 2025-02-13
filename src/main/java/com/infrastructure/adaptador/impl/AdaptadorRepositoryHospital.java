@@ -1,4 +1,4 @@
-package com.infrastructure.adaptador;
+package com.infrastructure.adaptador.impl;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import lombok.AllArgsConstructor;
 @Component
 @AllArgsConstructor
 public class AdaptadorRepositoryHospital {
-	private HospitalRepository repositorioH;
+	private final HospitalRepository repositorioH;
 
-	private MappersHospital mapperHospital;
+	private final MappersHospital mapperHospital;
 
 	public List<HospitalDTO> buscarTodosH() {
 		return repositorioH.findAll().stream().map(hospital -> mapperHospital.toDTOHospital(hospital)).toList();
@@ -26,16 +26,17 @@ public class AdaptadorRepositoryHospital {
 
 	public long save(HospitalDTO dto) {
 		Hospital hospital = mapperHospital.toEntityHospital(dto);
-		repositorioH.save(hospital);
-		return hospital.getId();
+		return repositorioH.save(hospital).getId();
 	}
 
 	public void eliminarHospital(long id) {
-		repositorioH.findById(id).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El hospital no existe"));
+		if (!repositorioH.existsById(id)) {
+			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El ide de ese hospital no existe");
+		}
 		repositorioH.deleteById(id);
 	}
 
 	public HospitalDTO buscarHospital(long id) throws ExcepcionServicio {
-		return mapperHospital.toDTOHospital(repositorioH.findById(id).get());
+		return mapperHospital.toDTOHospital(repositorioH.findById(id).orElse(null));
 	}
 }

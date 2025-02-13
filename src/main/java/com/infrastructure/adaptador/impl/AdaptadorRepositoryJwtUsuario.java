@@ -1,4 +1,4 @@
-package com.infrastructure.adaptador;
+package com.infrastructure.adaptador.impl;
 
 public class AdaptadorRepositoryJwtUsuario {
 

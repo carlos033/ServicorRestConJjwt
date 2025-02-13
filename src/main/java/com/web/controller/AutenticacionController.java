@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.application.serviceImpl.ServiciosJwtUsuarios;
-import com.application.serviceImpl.ServiciosMedico;
-import com.application.serviceImpl.ServiciosPaciente;
+import com.application.service.impl.ServiciosJwtUsuarios;
+import com.application.service.impl.ServiciosMedico;
+import com.application.service.impl.ServiciosPaciente;
 import com.domain.dto.jwt.JwtResponse;
 import com.domain.dto.jwt.LoginRequest;
 import com.infrastructure.security.JwtToken;

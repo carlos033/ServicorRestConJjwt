@@ -54,6 +54,10 @@ public class HospitalJpaController {
 
 	@GetMapping("{nombre}")
 	public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable long id) throws ExcepcionServicio {
-		return ResponseEntity.ok(sHospital.buscarHospital(id));
+		HospitalDTO dto = sHospital.buscarHospital(id);
+		if (dto == null) {
+			return ResponseEntity.noContent().build();
+		}
+		return ResponseEntity.ok(dto);
 	}
 }

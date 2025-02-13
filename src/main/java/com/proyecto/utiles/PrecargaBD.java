@@ -6,7 +6,7 @@ package com.proyecto.utiles;
 import org.springframework.stereotype.Component;
 
 import com.domain.dto.MedicoDTO;
-import com.infrastructure.adaptador.AdaptadorRepositoryMedico;
+import com.infrastructure.adaptador.impl.AdaptadorRepositoryMedico;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
