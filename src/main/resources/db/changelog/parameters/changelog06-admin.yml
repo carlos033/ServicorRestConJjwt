@@ -13,5 +13,8 @@ databaseChangeLog:
                   name: nombre
                   value: "Admin"
               - column:
+                  name: especialidad
+                  value: 'Administrador'
+              - column:
                   name: password
                   value: "$2a$10$X/BtsXv/PL9NPJyu7PLyN.k8z2wbHoKg288dYe45kQ4r80TNCpIUS"

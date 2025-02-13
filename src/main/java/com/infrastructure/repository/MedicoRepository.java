@@ -23,7 +23,7 @@ public interface MedicoRepository extends JpaRepository<Medico, String> {
 	        SELECT m FROM Medico m
 	        JOIN m.listaCitas medicocitas
 	        JOIN medicocitas.paciente p
-	        WHERE p.nSS = :nSS AND m.especialidad = 'Atencion primaria'
+	        WHERE p.nss = :nSS AND m.especialidad = 'Atencion primaria'
 	        """;
 
 	String SQL_BUSCAR_PACIENTES_POR_MEDICO = """
@@ -33,7 +33,7 @@ public interface MedicoRepository extends JpaRepository<Medico, String> {
 	        p.listaCitas pacientecitas
 	        JOIN pacientecitas.
 	        medico m
-	        WHERE m.nLicencia=:nLicencia""";
+	        WHERE m.numLicencia=:nLicencia""";
 
 	String SQL_BUSCAR_MEDICO_POR_ESPECIALIDAD_HOSPITAL = """
 	        Select m

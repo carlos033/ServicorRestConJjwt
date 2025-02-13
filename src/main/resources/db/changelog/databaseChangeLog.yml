@@ -1,14 +1,14 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changelog01-hospital.yml
+      file: db/changelog/parameters/changelog01-hospital.yml
   - include:
-      file: db/changelog/changelog02-paciente.yml
+      file: db/changelog/parameters/changelog02-paciente.yml
   - include:
-      file: db/changelog/changelog03-medico.yml
+      file: db/changelog/parameters/changelog03-medico.yml
   - include:
-      file: db/changelog/changelog04-cita.yml
+      file: db/changelog/parameters/changelog04-cita.yml
   - include:
-      file: db/changelog/changelog05-informe.yml
+      file: db/changelog/parameters/changelog05-informe.yml
   - include:
-      file: db/changelog/changelog06-admin.yml 
+      file: db/changelog/parameters/changelog06-admin.yml 
 

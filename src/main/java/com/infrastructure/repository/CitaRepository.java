@@ -20,16 +20,16 @@ import com.domain.model.Cita;
 public interface CitaRepository extends JpaRepository<Cita, Long> {
 
 	@EntityGraph(attributePaths = { "paciente", "medico" })
-	@Query("Select c from Cita c where c.paciente.nSS= :nss")
+	@Query("Select c from Cita c where c.paciente.nss= :nss")
 	public List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
 
-	@Query("Select c from Cita c where c.medico.nLicencia = :nLicencia")
+	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia")
 	public List<Cita> buscarCitaXMedico(@Param("nLicencia") String nLicencia);
 
-	@Query("Select c from Cita c where c.paciente.nSS= :nss and c.fHoraCita = :fecha")
+	@Query("Select c from Cita c where c.paciente.nss= :nss and c.fechaCita = :fecha")
 	public List<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
 
-	@Query("Select c from Cita c where c.medico.nLicencia = :nLicencia and c.fHoraCita = :fecha")
+	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia and c.fechaCita = :fecha")
 	public List<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
 
 }

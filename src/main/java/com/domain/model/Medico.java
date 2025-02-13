@@ -49,7 +49,7 @@ public class Medico implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "especialidad")
 	private String especialidad;
-	@Basic(optional = false)
+	@Basic(optional = true)
 	@Column(name = "consulta")
 	private int consulta;
 	@Column(name = "password", nullable = false)
