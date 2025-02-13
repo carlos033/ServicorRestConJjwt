@@ -10,7 +10,7 @@ import com.domain.dto.CitaDTO;
 import com.domain.model.Cita;
 
 @Mapper(componentModel = "spring")
-public interface MappersCitas {
+public interface MappersCita {
 
 	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "fechaCita", source = "fechaCita")

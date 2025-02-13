@@ -8,10 +8,10 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.application.service.ServiciosCitaI;
+import com.application.service.ServicioCita;
 import com.domain.dto.CitaDTO;
 import com.domain.exception.ExcepcionServicio;
-import com.infrastructure.adaptador.impl.AdaptadorRepositoryCita;
+import com.infrastructure.adaptador.impl.AdaptadorCitaImpl;
 
 import lombok.AllArgsConstructor;
 
@@ -22,9 +22,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service("ServiciosCitaI")
 @Transactional
-public class ServiciosCita implements ServiciosCitaI {
+public class ServiciosCita implements ServicioCita {
 
-	private final AdaptadorRepositoryCita adaptador;
+	private final AdaptadorCitaImpl adaptador;
 
 	@Override
 	public long crearCita(CitaDTO dto) throws ExcepcionServicio {

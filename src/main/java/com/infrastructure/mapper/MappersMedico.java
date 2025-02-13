@@ -14,7 +14,7 @@ import com.domain.model.Informe;
 import com.domain.model.Medico;
 
 @Mapper(componentModel = "spring")
-public interface MappersMedicos {
+public interface MappersMedico {
 
 	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "consulta", source = "consulta")

@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 5
-      author: tu_nombre
+      author: Carlos
       changes:
         - createTable:
             tableName: informes

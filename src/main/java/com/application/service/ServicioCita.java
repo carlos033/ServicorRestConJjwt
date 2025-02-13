@@ -12,7 +12,7 @@ import com.domain.exception.ExcepcionServicio;
  *
  * @author ck
  */
-public interface ServiciosCitaI {
+public interface ServicioCita {
 
 	List<CitaDTO> buscarTodasC();
 

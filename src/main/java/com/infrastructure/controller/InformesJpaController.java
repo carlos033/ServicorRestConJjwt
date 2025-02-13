@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
-package com.web.controller;
+package com.infrastructure.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -15,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.service.ServiciosHospitalI;
-import com.domain.dto.HospitalDTO;
-import com.domain.exception.ExcepcionServicio;
+import com.application.service.ServicioInforme;
+import com.domain.dto.InformeDTO;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,36 +27,32 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @RestController
-@RequestMapping(path = "/hospitales")
-public class HospitalJpaController {
+@RequestMapping(path = "/informes")
+public class InformesJpaController {
 
-	private ServiciosHospitalI sHospital;
+	private final ServicioInforme sInformes;
 
 	@PostMapping
-	public ResponseEntity<HospitalDTO> aniadirHospital(@Valid @RequestBody HospitalDTO hospitalDto) {
-		long id = sHospital.save(hospitalDto);
-		URI location = URI.create("/hospitales/" + id);
-
+	public ResponseEntity<InformeDTO> aniadirInforme(@Valid @RequestBody InformeDTO dTO) {
+		long id = sInformes.crearInforme(dTO);
+		URI location = URI.create("/medicos/" + id);
 		return ResponseEntity.created(location).build();
 	}
 
 	@DeleteMapping("/{nombre}")
-	public ResponseEntity<Void> eliminarHospital(@PathVariable long id) throws ExcepcionServicio {
-		sHospital.eliminarHospital(id);
+	public ResponseEntity<Void> eliminarInforme(@PathVariable long id) {
+		sInformes.eliminarInforme(id);
 		return ResponseEntity.noContent().build();
 	}
 
 	@GetMapping
-	public ResponseEntity<List<HospitalDTO>> listarhospitales() {
-		return ResponseEntity.ok(sHospital.buscarTodosH());
+	public ResponseEntity<List<InformeDTO>> listInformes() {
+		return ResponseEntity.ok(sInformes.buscarTodosI());
 	}
 
-	@GetMapping("{nombre}")
-	public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable long id) throws ExcepcionServicio {
-		HospitalDTO dto = sHospital.buscarHospital(id);
-		if (dto == null) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(dto);
+	@GetMapping("/{nSS}/informes")
+	public ResponseEntity<List<InformeDTO>> buscarInformesXPaciente(@PathVariable String nSS) {
+		return ResponseEntity.ok(sInformes.buscarInformesXPaciente(nSS));
 	}
+
 }

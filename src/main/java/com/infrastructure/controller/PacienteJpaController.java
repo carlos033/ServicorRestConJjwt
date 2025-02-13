@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
-package com.web.controller;
+package com.infrastructure.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.service.ServiciosPacienteI;
+import com.application.service.ServicioPaciente;
 import com.domain.dto.PacienteDTO;
 
 import jakarta.validation.Valid;
@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/pacientes")
 public class PacienteJpaController {
 
-	private final ServiciosPacienteI sPaciente;
+	private final ServicioPaciente sPaciente;
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)

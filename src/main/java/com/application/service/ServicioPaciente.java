@@ -11,7 +11,7 @@ import com.domain.dto.PacienteDTO;
  *
  * @author ck
  */
-public interface ServiciosPacienteI {
+public interface ServicioPaciente {
 
 	List<PacienteDTO> buscarTodosP();
 

@@ -9,4 +9,6 @@ databaseChangeLog:
       file: db/changelog/changelog04-cita.yml
   - include:
       file: db/changelog/changelog05-informe.yml
+  - include:
+      file: db/changelog/changelog06-admin.yml 
 

@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.application.service.ServiciosPacienteI;
+import com.application.service.ServicioPaciente;
 import com.domain.dto.PacienteDTO;
-import com.infrastructure.adaptador.impl.AdaptadorRepositoryPaciente;
+import com.infrastructure.adaptador.impl.AdaptadorPacienteImpl;
 
 import lombok.AllArgsConstructor;
 
@@ -19,9 +19,9 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @Service
-public class ServiciosPaciente implements ServiciosPacienteI {
+public class ServiciosPaciente implements ServicioPaciente {
 
-	private AdaptadorRepositoryPaciente adaptadorPaciente;
+	private AdaptadorPacienteImpl adaptadorPaciente;
 
 	@Override
 	public List<PacienteDTO> buscarTodosP() {

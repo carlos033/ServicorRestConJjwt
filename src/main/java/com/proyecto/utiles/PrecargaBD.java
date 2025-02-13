@@ -6,7 +6,7 @@ package com.proyecto.utiles;
 import org.springframework.stereotype.Component;
 
 import com.domain.dto.MedicoDTO;
-import com.infrastructure.adaptador.impl.AdaptadorRepositoryMedico;
+import com.infrastructure.adaptador.impl.AdaptadorMedicoImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 @Component
 public class PrecargaBD {
 
-	private AdaptadorRepositoryMedico adaptador;
+	private AdaptadorMedicoImpl adaptador;
 
 	@Transactional
 	public void precargarBaseDeDatos() {

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 06
+      author: Carlos
+      changes:
+        - insert:
+            tableName: medico
+            columns:
+              - column:
+                  name: n_licencia
+                  value: "M1"
+              - column:
+                  name: nombre
+                  value: "Admin"
+              - column:
+                  name: password
+                  value: "$2a$10$X/BtsXv/PL9NPJyu7PLyN.k8z2wbHoKg288dYe45kQ4r80TNCpIUS"

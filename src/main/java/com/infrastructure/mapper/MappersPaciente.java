@@ -14,7 +14,7 @@ import com.domain.model.Informe;
 import com.domain.model.Paciente;
 
 @Mapper(componentModel = "spring")
-public interface MappersPacientes {
+public interface MappersPaciente {
 
 	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 	@Mapping(target = "fechaNacimiento", source = "fechaNacimiento")

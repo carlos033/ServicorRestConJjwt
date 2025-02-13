@@ -7,10 +7,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.application.service.ServiciosMedicoI;
+import com.application.service.ServicioMedico;
 import com.domain.dto.MedicoDTO;
 import com.domain.exception.ExcepcionServicio;
-import com.infrastructure.adaptador.impl.AdaptadorRepositoryMedico;
+import com.infrastructure.adaptador.impl.AdaptadorMedicoImpl;
 
 import lombok.AllArgsConstructor;
 
@@ -20,9 +20,9 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @Service
-public class ServiciosMedico implements ServiciosMedicoI {
+public class ServiciosMedico implements ServicioMedico {
 
-	private AdaptadorRepositoryMedico adaptador;
+	private AdaptadorMedicoImpl adaptador;
 
 	@Override
 	public List<MedicoDTO> buscarTodosM() {

@@ -5,18 +5,11 @@ package com.application.service.impl;
 
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.application.service.ServiciosInformeI;
-import com.domain.exception.ExcepcionServicio;
-import com.domain.model.Informe;
-import com.domain.model.Medico;
-import com.domain.model.Paciente;
-import com.infrastructure.repository.InformeRepository;
-import com.infrastructure.repository.MedicoRepository;
-import com.infrastructure.repository.PacienteRepository;
+import com.application.service.ServicioInforme;
+import com.domain.dto.InformeDTO;
+import com.infrastructure.adaptador.impl.AdaptadorInformeImpl;
 
 import lombok.AllArgsConstructor;
 
@@ -26,62 +19,34 @@ import lombok.AllArgsConstructor;
  */
 @AllArgsConstructor
 @Service
-@Transactional
-public class ServiciosInforme implements ServiciosInformeI {
+public class ServiciosInforme implements ServicioInforme {
 
-	private InformeRepository repositorioI;
-
-	private PacienteRepository repositorioP;
-
-	private MedicoRepository repositorioM;
+	private final AdaptadorInformeImpl adaptador;
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Informe> buscarTodosI() {
-		return repositorioI.findAll();
+	public List<InformeDTO> buscarTodosI() {
+		return adaptador.buscarTodosI();
 	}
 
 	@Override
-	public void saveInformes(Informe informe) throws ExcepcionServicio {
-		repositorioI.save(informe);
+	public void eliminarInforme(long id) {
+		adaptador.eliminarInforme(id);
 	}
 
 	@Override
-	public void eliminarInforme(String nombre) throws ExcepcionServicio {
-		repositorioI.findById(nombre).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El nombre del informe no existe"));
-		repositorioI.deleteById(nombre);
+
+	public List<InformeDTO> buscarInformesXPaciente(String nSS) {
+		return adaptador.buscarInformesXPaciente(nSS);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Informe> buscarInformesXPaciente(String nSS) throws ExcepcionServicio {
-		repositorioP.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
 
-		return repositorioI.buscarInformeXPaciente(nSS);
+	public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
+		return adaptador.buscarInformesXMedico(nLicencia);
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public List<Informe> buscarInformesXMedico(String nLicencia) throws ExcepcionServicio {
-		repositorioM.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
-
-		return repositorioI.buscarInformeXMedico(nLicencia);
-	}
-
-	@Override
-	@Transactional(readOnly = true)
-	public void eliminarTodosXPaciente(String nSS) throws ExcepcionServicio {
-		List<Informe> listaCitas = buscarInformesXPaciente(nSS);
-		repositorioI.deleteAllInBatch(listaCitas);
-	}
-
-	@Override
-	public Informe crearInforme(Informe informe) throws ExcepcionServicio {
-		Medico medico = repositorioM.findById(informe.getMedico().getNumLicencia()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
-		Paciente paciente = repositorioP.findById(informe.getPaciente().getNss()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
-
-		informe.setPaciente(paciente);
-		informe.setMedico(medico);
-		return this.repositorioI.save(informe);
+	public long crearInforme(InformeDTO dto) {
+		return adaptador.crearInforme(dto);
 	}
 }

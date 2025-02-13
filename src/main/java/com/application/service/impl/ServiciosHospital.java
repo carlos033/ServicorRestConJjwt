@@ -8,9 +8,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.application.service.ServiciosHospitalI;
+import com.application.service.ServicioHospita;
 import com.domain.dto.HospitalDTO;
-import com.infrastructure.adaptador.impl.AdaptadorRepositoryHospital;
+import com.infrastructure.adaptador.impl.AdaptadorHospitalImpl;
 
 import lombok.AllArgsConstructor;
 
@@ -21,9 +21,9 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Service
 @Transactional
-public class ServiciosHospital implements ServiciosHospitalI {
+public class ServiciosHospital implements ServicioHospita {
 
-	private AdaptadorRepositoryHospital adaptador;
+	private AdaptadorHospitalImpl adaptador;
 
 	@Override
 	public List<HospitalDTO> buscarTodosH() {

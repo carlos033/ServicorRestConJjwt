@@ -1,7 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
  */
-package com.web.controller;
+package com.infrastructure.controller;
 
 import java.net.URI;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.application.service.ServiciosCitaI;
+import com.application.service.ServicioCita;
 import com.domain.dto.CitaDTO;
 import com.domain.exception.ExcepcionServicio;
 
@@ -31,7 +31,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/citas")
 public class CitasJpaController {
 
-	private final ServiciosCitaI sCita;
+	private final ServicioCita sCita;
 
 	@GetMapping()
 	public ResponseEntity<List<CitaDTO>> listarCitas() {
