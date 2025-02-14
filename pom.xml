@@ -107,6 +107,11 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.zalando</groupId>
+            <artifactId>problem-spring-web-starter</artifactId>
+            <version>0.29.1</version>
+        </dependency>
 
         <!-- Spring Boot Test -->
         <dependency>
