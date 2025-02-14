@@ -1,27 +1,42 @@
 logging:
    level:
       org:
+         springframework:
+            security: DEBUG   # 🔍 Logs detallados de Spring Security
+            web: DEBUG         # 🔍 Logs detallados de Spring Web
          hibernate:
-            type: trace
+            type: trace        # 🔍 Logs SQL con más detalles
+      liquibase: DEBUG         # 🔍 Logs de Liquibase
+
 server:
    error:
-      include-stacktrace: never
-   servlet:
-      context-path: /servidor
+      include-message: always  # 🔥 Incluir detalles en las respuestas de error
+      include-stacktrace: always
+      include-binding-errors: always
+
 spring:
    datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/centro_medico?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
       username: root
       password: ''
-      url: jdbc:mysql://localhost:3306/proyecto3?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      hikari:
+         maximum-pool-size: 10   # 🔥 Pool de conexiones más optimizado
+         minimum-idle: 5
+         idle-timeout: 30000
+         max-lifetime: 2000000
+         connection-timeout: 30000
+
    jpa:
+      open-in-view: false      # 🔥 Evita problemas de Lazy Loading
       hibernate:
-         ddl-auto: none
+         ddl-auto: none        # 📌 No modificar la BD automáticamente
       properties:
          hibernate:
             dialect: org.hibernate.dialect.MySQL8Dialect
-            type: trace
-      show-sql: true
+ 
    liquibase:
       change-log: classpath:db/changelog/databaseChangeLog.yml
-      enabled: true  
+      enabled: true
+      drop-first: false  # 🔥 Cambia a `true` si quieres limpiar la BD antes de aplicar cambios
+

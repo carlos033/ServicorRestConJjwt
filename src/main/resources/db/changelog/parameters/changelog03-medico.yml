@@ -33,12 +33,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: hospital_id  # 🔥 Nombre correcto de la FK
+                  name: id  # 🔥 Nombre correcto de la FK
                   type: BIGINT
 
         - addForeignKeyConstraint:
             constraintName: FK_medico_hospital
             baseTableName: medico
-            baseColumnNames: hospital_id  # 🔥 Debe coincidir con el nombre en `medico`
+            baseColumnNames: id  # 🔥 Debe coincidir con el nombre en `medico`
             referencedTableName: hospital
             referencedColumnNames: id  # 🔥 Se referencia `id`, la PK de `hospital`
