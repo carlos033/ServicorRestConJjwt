@@ -23,7 +23,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  *
@@ -34,7 +33,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = { "medico", "paciente" })
 @Entity
 @Table(name = "cita", uniqueConstraints = { @UniqueConstraint(columnNames = { "n_licencia", "f_hora_cita" }, name = "UK_medico_cita"), @UniqueConstraint(columnNames = { "nss", "f_hora_cita" }, name = "UK_paciente_cita") })
 public class Cita implements Serializable {

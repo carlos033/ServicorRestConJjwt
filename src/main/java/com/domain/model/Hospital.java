@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  *
@@ -28,7 +27,6 @@ import lombok.ToString;
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = "listaMedicos")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter

@@ -21,14 +21,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  *
  * @author ck
  */
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(exclude = { "listaCitas", "listaInformes" })
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
