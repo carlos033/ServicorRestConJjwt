@@ -6,9 +6,11 @@ package com.domain.dto;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  *
  * @author ck
  */
-public record CitaDTO(long id, LocalDateTime fechaCita, PacienteDTO paciente, MedicoDTO medico) implements Serializable {
+public record CitaDTO(long id, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm") LocalDateTime fechaCita, PacienteDTO paciente, MedicoDTO medico) implements Serializable {
 }

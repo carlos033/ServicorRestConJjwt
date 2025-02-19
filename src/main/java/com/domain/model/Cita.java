@@ -15,8 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -44,7 +42,6 @@ public class Cita implements Serializable {
 	private long id;
 	@Basic(optional = false)
 	@Column(name = "f_hora_cita")
-	@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime fechaCita;
 	@JoinColumn(name = "nss", referencedColumnName = "nss")
 	@ManyToOne(optional = false)
