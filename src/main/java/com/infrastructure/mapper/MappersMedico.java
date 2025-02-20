@@ -21,7 +21,7 @@ public interface MappersMedico {
 	@Mapping(target = "listaInformes", source = "listaInformes")
 	@Mapping(target = "listaCitas", source = "listaCitas")
 	@Mapping(target = "especialidad", source = "especialidad")
-	@Mapping(target = "hospital.nombreHos", source = "hospital.nombreHos")
+	@Mapping(target = "hospital.id", source = "hospital.id")
 	@Mapping(target = "nombre", source = "nombre")
 	@Mapping(target = "numLicencia", source = "numLicencia")
 	@Mapping(target = "password", source = "password")

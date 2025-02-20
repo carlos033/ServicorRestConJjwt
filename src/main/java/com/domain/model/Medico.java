@@ -53,7 +53,7 @@ public class Medico implements Serializable {
 	@Column(name = "password", nullable = false)
 	private String password;
 	@JoinColumn(name = "id")
-	@ManyToOne(optional = true)
+	@ManyToOne
 	private Hospital hospital;
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "medico")
 	private List<Cita> listaCitas;

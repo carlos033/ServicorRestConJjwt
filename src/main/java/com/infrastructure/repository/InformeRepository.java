@@ -19,8 +19,8 @@ import com.domain.model.Informe;
 public interface InformeRepository extends JpaRepository<Informe, Long> {
 
 	@Query("Select i from Informe i where i.paciente.nss = :nSS")
-	public List<Informe> buscarInformeXPaciente(@Param("nSS") String nSS);
+	List<Informe> buscarInformeXPaciente(@Param("nSS") String nSS);
 
 	@Query("Select i from Informe i where i.medico.numLicencia = :nLicencia")
-	public List<Informe> buscarInformeXMedico(@Param("nLicencia") String nLicencia);
+	List<Informe> buscarInformeXMedico(@Param("nLicencia") String nLicencia);
 }

@@ -39,14 +39,13 @@ public class AdaptadorCitaImpl implements AdaptadorCita {
 		LocalDateTime fecha = dto.fechaCita();
 		String nss = dto.paciente().nss();
 		String nLicencia = dto.medico().numLicencia();
-		List<Cita> citasPacienteEsaHora = citaRepository.buscarCitaXPacienteYHora(nss, fecha);
-		List<Cita> citasMedicoEsaHora = citaRepository.buscarCitaXMedicoYHora(nLicencia, fecha);
-		if (citasPacienteEsaHora.isEmpty()) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "Usted ya tiene una cita en esa fecha y hora");
-		}
-		if (citasMedicoEsaHora.isEmpty()) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El medico no tiene hueco a esa hora ese dia");
-		}
+		citaRepository.buscarCitaXPacienteYHora(nss, fecha).ifPresent(cita -> {
+			throw new ExcepcionServicio(HttpStatus.CONFLICT, "Usted ya tiene una cita en esa fecha y hora");
+		});
+
+		citaRepository.buscarCitaXMedicoYHora(nLicencia, fecha).ifPresent(cita -> {
+			throw new ExcepcionServicio(HttpStatus.CONFLICT, "El médico no tiene hueco a esa hora ese día");
+		});
 		if (fecha.isBefore(fechaDHoy)) {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "La fecha debe ser posterior a hoy");
 		}

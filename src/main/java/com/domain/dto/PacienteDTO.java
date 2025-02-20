@@ -8,12 +8,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.domain.model.Logable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  *
  * @author ck
  */
-public record PacienteDTO(String nss, String nombre, String password, LocalDate fechaNacimiento, List<CitaDTO> listaCitas, List<InformeDTO> listaInformes) implements Serializable, Logable {
+public record PacienteDTO(String nss, String nombre, String password, @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy") LocalDate fechaNacimiento, List<CitaDTO> listaCitas, List<InformeDTO> listaInformes)
+        implements Serializable, Logable {
 	@Override
 	public String getIdentifier() {
 		return nss;

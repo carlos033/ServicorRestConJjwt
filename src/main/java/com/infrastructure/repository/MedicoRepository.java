@@ -46,14 +46,14 @@ public interface MedicoRepository extends JpaRepository<Medico, String> {
 	        where m.hospital.id = :idHospital""";
 
 	@Query(SQL_BUSCAR_PACIENTES_POR_MEDICO)
-	public List<Paciente> buscarPacientesXMedico(@Param("nLicencia") String nLicencia);
+	List<Paciente> buscarPacientesXMedico(@Param("nLicencia") String nLicencia);
 
 	@Query(SQL_BUSCAR_MEDICO_POR_ESPECIALIDAD_HOSPITAL)
-	public List<Medico> buscarMedicoXEspecialidad(@Param("especialidad") String especialidad, @Param("idHospital") long idHospital);
+	List<Medico> buscarMedicoXEspecialidad(@Param("especialidad") String especialidad, @Param("idHospital") long idHospital);
 
 	@Query(SQL_BUSCAR_MEDICOS_POR_HOSPITAL)
-	public List<Medico> buscarMedicosXHospital(@Param("idHospital") long idHospital);
+	List<Medico> buscarMedicosXHospital(@Param("idHospital") long idHospital);
 
 	@Query(SQL_BUSCAR_MEDICO_CABECERA)
-	public Optional<Medico> buscarMmedico(@Param("nSS") String nSS);
+	Optional<Medico> buscarMmedico(@Param("nSS") String nSS);
 }

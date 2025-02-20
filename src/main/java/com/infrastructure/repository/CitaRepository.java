@@ -5,6 +5,7 @@ package com.infrastructure.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,15 +22,15 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
 	@EntityGraph(attributePaths = { "paciente", "medico" })
 	@Query("Select c from Cita c where c.paciente.nss= :nss")
-	public List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
+	List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
 
 	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia")
-	public List<Cita> buscarCitaXMedico(@Param("nLicencia") String nLicencia);
+	List<Cita> buscarCitaXMedico(@Param("nLicencia") String nLicencia);
 
 	@Query("Select c from Cita c where c.paciente.nss= :nss and c.fechaCita = :fecha")
-	public List<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
+	Optional<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
 
 	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia and c.fechaCita = :fecha")
-	public List<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
+	Optional<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
 
 }
