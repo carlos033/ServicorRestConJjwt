@@ -10,6 +10,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,13 +25,13 @@ import com.domain.dto.jwt.JwtResponse;
 import com.domain.dto.jwt.LoginRequest;
 import com.infrastructure.security.JwtToken;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 /**
  *
  * @author ck
  */
+@Transactional
 @AllArgsConstructor
 @RestController
 @CrossOrigin
@@ -69,7 +70,6 @@ public class AutenticacionController {
 		}
 	}
 
-	@Transactional
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

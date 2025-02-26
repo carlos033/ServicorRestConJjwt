@@ -33,7 +33,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
-class WebSecurityConfig {
+public class WebSecurityConfig {
 
 	private final JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
 
@@ -51,7 +51,8 @@ class WebSecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/autenticacion/login").permitAll().anyRequest().authenticated())
+		return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource()))
+		        .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/autenticacion/login").permitAll().requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())
 		        .exceptionHandling(eh -> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint)).sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).build();
 	}
@@ -72,7 +73,7 @@ class WebSecurityConfig {
 
 	@Bean
 	OpenAPI customOpenAPI() {
-		return new OpenAPI().info(new Info().title("Servidor Medico").description("Descripción de tu API").version("1.0"));
+		return new OpenAPI().info(new Info().title("Servidor Medico").description("API para la gestion de hospitales").version("1.0"));
 	}
 
 	@Bean
