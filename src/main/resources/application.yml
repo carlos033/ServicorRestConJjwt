@@ -15,6 +15,8 @@ server:
       include-binding-errors: always
 
 spring:
+   jackson:
+      default-property-inclusion: non-null		
    datasource:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/centro_medico?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
