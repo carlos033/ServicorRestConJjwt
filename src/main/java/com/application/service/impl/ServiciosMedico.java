@@ -5,6 +5,7 @@ package com.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.application.service.ServicioMedico;
@@ -25,8 +26,8 @@ public class ServiciosMedico implements ServicioMedico {
 	private AdaptadorMedicoImpl adaptador;
 
 	@Override
-	public List<MedicoDTO> buscarTodosM() {
-		return adaptador.buscarTodosM();
+	public List<MedicoDTO> buscarTodosM(Pageable pageable) {
+		return adaptador.buscarTodosM(pageable);
 	}
 
 	@Override

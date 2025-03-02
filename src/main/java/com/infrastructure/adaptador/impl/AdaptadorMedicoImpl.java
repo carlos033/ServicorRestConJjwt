@@ -2,6 +2,7 @@ package com.infrastructure.adaptador.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,8 @@ public class AdaptadorMedicoImpl implements AdaptadorMedico {
 	private final BCryptPasswordEncoder passwordEncoder;
 
 	@Override
-	public List<MedicoDTO> buscarTodosM() {
-		return medicoRepository.findAll().stream().map(medico -> mapperMedico.toDTOMedico(medico)).toList();
+	public List<MedicoDTO> buscarTodosM(Pageable pageable) {
+		return medicoRepository.findAll(pageable).stream().map(medico -> mapperMedico.toDTOMedico(medico)).toList();
 	}
 
 	@Override

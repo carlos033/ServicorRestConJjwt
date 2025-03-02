@@ -2,12 +2,12 @@ package com.application.adaptador;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.domain.dto.MedicoDTO;
 import com.domain.exception.ExcepcionServicio;
 
 public interface AdaptadorMedico {
-
-	List<MedicoDTO> buscarTodosM();
 
 	String saveMedico(MedicoDTO dto);
 
@@ -20,5 +20,7 @@ public interface AdaptadorMedico {
 	List<MedicoDTO> buscarMedicosXHospital(long idHospital);
 
 	MedicoDTO buscarMiMedico(String nSS);
+
+	List<MedicoDTO> buscarTodosM(Pageable pageable);
 
 }

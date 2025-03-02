@@ -5,6 +5,8 @@ package com.application.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.domain.dto.MedicoDTO;
 import com.domain.exception.ExcepcionServicio;
 
@@ -13,8 +15,6 @@ import com.domain.exception.ExcepcionServicio;
  * @author ck
  */
 public interface ServicioMedico {
-
-	List<MedicoDTO> buscarTodosM();
 
 	String saveMedico(MedicoDTO dto);
 
@@ -27,5 +27,7 @@ public interface ServicioMedico {
 	List<MedicoDTO> buscarMedicosXHospital(long hospital) throws ExcepcionServicio;
 
 	MedicoDTO buscarMiMedico(String nSS);
+
+	List<MedicoDTO> buscarTodosM(Pageable pageable);
 
 }
