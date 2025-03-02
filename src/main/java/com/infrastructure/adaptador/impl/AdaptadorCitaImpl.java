@@ -39,11 +39,11 @@ public class AdaptadorCitaImpl implements AdaptadorCita {
 		LocalDateTime fecha = dto.fechaCita();
 		String nss = dto.paciente().nss();
 		String nLicencia = dto.medico().numLicencia();
-		citaRepository.buscarCitaXPacienteYHora(nss, fecha).ifPresent(cita -> {
+		citaRepository.findByPacienteNssAndFechaCita(nss, fecha).ifPresent(cita -> {
 			throw new ExcepcionServicio(HttpStatus.CONFLICT, "Usted ya tiene una cita en esa fecha y hora");
 		});
 
-		citaRepository.buscarCitaXMedicoYHora(nLicencia, fecha).ifPresent(cita -> {
+		citaRepository.findByMedicoNumLicenciaAndFechaCita(nLicencia, fecha).ifPresent(cita -> {
 			throw new ExcepcionServicio(HttpStatus.CONFLICT, "El médico no tiene hueco a esa hora ese día");
 		});
 		if (fecha.isBefore(fechaDHoy)) {
@@ -82,7 +82,7 @@ public class AdaptadorCitaImpl implements AdaptadorCita {
 
 	@Override
 	public List<CitaDTO> buscarXMedico(String nLicencia) {
-		List<Cita> listaCitas = citaRepository.buscarCitaXMedico(nLicencia);
+		List<Cita> listaCitas = citaRepository.findByMedicoNumLicencia(nLicencia);
 		if (listaCitas.isEmpty()) {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "el numero de licencia no existe");
 		}

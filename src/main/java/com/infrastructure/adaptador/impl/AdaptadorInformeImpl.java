@@ -46,13 +46,13 @@ public class AdaptadorInformeImpl implements AdaptadorInforme {
 	@Override
 	public List<InformeDTO> buscarInformesXPaciente(String nSS) {
 		pacienteRepository.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
-		return informeRepository.buscarInformeXPaciente(nSS).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
+		return informeRepository.findByPacienteNss(nSS).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
 	}
 
 	@Override
 	public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
 		medicoRepository.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
-		return informeRepository.buscarInformeXMedico(nLicencia).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
+		return informeRepository.findByMedicoNumLicencia(nLicencia).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
 	}
 
 	@Override

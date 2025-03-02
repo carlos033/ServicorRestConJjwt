@@ -58,7 +58,7 @@ public class AdaptadorMedicoImpl implements AdaptadorMedico {
 	@Override
 	public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long idHospital) throws ExcepcionServicio {
 		hospitalRepository.findById(idHospital).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El hospital no existe"));
-		List<MedicoDTO> listaMedicoDTO = medicoRepository.buscarMedicoXEspecialidad(especialidad, idHospital).stream().map(mapperMedico::toDTOMedico).toList();
+		List<MedicoDTO> listaMedicoDTO = medicoRepository.findByEspecialidadAndHospitalId(especialidad, idHospital).stream().map(mapperMedico::toDTOMedico).toList();
 		if (listaMedicoDTO.isEmpty()) {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos con esa especialidad");
 		}
@@ -67,7 +67,7 @@ public class AdaptadorMedicoImpl implements AdaptadorMedico {
 
 	@Override
 	public List<MedicoDTO> buscarMedicosXHospital(long idHospital) {
-		List<MedicoDTO> listaMedicoDTO = medicoRepository.buscarMedicosXHospital(idHospital).stream().map(mapperMedico::toDTOMedico).toList();
+		List<MedicoDTO> listaMedicoDTO = medicoRepository.findByHospitalId(idHospital).stream().map(mapperMedico::toDTOMedico).toList();
 		if (listaMedicoDTO.isEmpty()) {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos en el hospital");
 		}

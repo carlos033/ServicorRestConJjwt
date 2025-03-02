@@ -24,13 +24,10 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 	@Query("Select c from Cita c where c.paciente.nss= :nss")
 	List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
 
-	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia")
-	List<Cita> buscarCitaXMedico(@Param("nLicencia") String nLicencia);
+	List<Cita> findByMedicoNumLicencia(@Param("nLicencia") String nLicencia);
 
-	@Query("Select c from Cita c where c.paciente.nss= :nss and c.fechaCita = :fecha")
-	Optional<Cita> buscarCitaXPacienteYHora(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
+	Optional<Cita> findByPacienteNssAndFechaCita(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
 
-	@Query("Select c from Cita c where c.medico.numLicencia = :nLicencia and c.fechaCita = :fecha")
-	Optional<Cita> buscarCitaXMedicoYHora(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
+	Optional<Cita> findByMedicoNumLicenciaAndFechaCita(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
 
 }
