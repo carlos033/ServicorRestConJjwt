@@ -5,10 +5,10 @@ package com.application.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.domain.dto.MedicoDTO;
-import com.domain.exception.ExcepcionServicio;
 
 /**
  *
@@ -24,7 +24,7 @@ public interface ServicioMedico {
 
 	List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long hospital);
 
-	List<MedicoDTO> buscarMedicosXHospital(long hospital) throws ExcepcionServicio;
+	Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable);
 
 	MedicoDTO buscarMiMedico(String nSS);
 

@@ -2,6 +2,7 @@ package com.application.adaptador;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.domain.dto.MedicoDTO;
@@ -17,7 +18,7 @@ public interface AdaptadorMedico {
 
 	List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long idHospital) throws ExcepcionServicio;
 
-	List<MedicoDTO> buscarMedicosXHospital(long idHospital);
+	Page<MedicoDTO> buscarMedicosXHospital(long idHospital, Pageable pageable);
 
 	MedicoDTO buscarMiMedico(String nSS);
 

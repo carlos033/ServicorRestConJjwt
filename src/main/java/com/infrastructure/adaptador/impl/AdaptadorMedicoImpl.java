@@ -2,6 +2,7 @@ package com.infrastructure.adaptador.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,12 +68,12 @@ public class AdaptadorMedicoImpl implements AdaptadorMedico {
 	}
 
 	@Override
-	public List<MedicoDTO> buscarMedicosXHospital(long idHospital) {
-		List<MedicoDTO> listaMedicoDTO = medicoRepository.findByHospitalId(idHospital).stream().map(mapperMedico::toDTOMedico).toList();
-		if (listaMedicoDTO.isEmpty()) {
+	public Page<MedicoDTO> buscarMedicosXHospital(long idHospital, Pageable pageable) {
+		Page<Medico> pageMedicos = medicoRepository.findByHospitalId(idHospital, pageable);
+		if (pageMedicos.isEmpty()) {
 			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos en el hospital");
 		}
-		return listaMedicoDTO;
+		return pageMedicos.map(mapperMedico::toDTOMedico);
 	}
 
 	@Override

@@ -6,6 +6,8 @@ package com.infrastructure.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,7 +42,7 @@ public interface MedicoRepository extends JpaRepository<Medico, String> {
 
 	List<Medico> findByEspecialidadAndHospitalId(@Param("especialidad") String especialidad, @Param("idHospital") long idHospital);
 
-	List<Medico> findByHospitalId(@Param("idHospital") long idHospital);
+	Page<Medico> findByHospitalId(@Param("idHospital") long idHospital, Pageable pageable);
 
 	@Query(SQL_BUSCAR_MEDICO_CABECERA)
 	Optional<Medico> buscarMmedico(@Param("nSS") String nSS);

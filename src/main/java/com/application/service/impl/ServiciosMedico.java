@@ -5,6 +5,7 @@ package com.application.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,8 @@ public class ServiciosMedico implements ServicioMedico {
 	}
 
 	@Override
-	public List<MedicoDTO> buscarMedicosXHospital(long hospital) throws ExcepcionServicio {
-		return adaptador.buscarMedicosXHospital(hospital);
+	public Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable) throws ExcepcionServicio {
+		return adaptador.buscarMedicosXHospital(hospital, pageable);
 	}
 
 	@Override

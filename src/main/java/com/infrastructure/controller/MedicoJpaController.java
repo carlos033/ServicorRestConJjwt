@@ -6,6 +6,7 @@ package com.infrastructure.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -70,8 +71,9 @@ public class MedicoJpaController {
 	}
 
 	@GetMapping("/hospital/{idHospital}")
-	public ResponseEntity<List<MedicoDTO>> buscarMedicosXHospital(@PathVariable long idHospital) {
-		return ResponseEntity.ok(sMedico.buscarMedicosXHospital(idHospital));
+	public ResponseEntity<Page<MedicoDTO>> buscarMedicosXHospital(@PathVariable long idHospital, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		return ResponseEntity.ok(sMedico.buscarMedicosXHospital(idHospital, pageable));
 	}
 
 	@GetMapping("/cabecera/{nSS}")
