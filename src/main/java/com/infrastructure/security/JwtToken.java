@@ -1,21 +1,18 @@
 package com.infrastructure.security;
 
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
 import javax.crypto.SecretKey;
-
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import com.domain.model.Logable;
 import com.domain.model.Medico;
 import com.domain.model.Paciente;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -25,67 +22,71 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class JwtToken implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public static final long JWT_TOKEN_VALIDITY = 30 * 60 * 60;
+  public static final Duration JWT_TOKEN_VALIDITY = Duration.ofHours(30);
 
-	private SecretKey secretKey;
+  private SecretKey secretKey;
 
-	@PostConstruct
-	public void init() throws Exception {
-		this.secretKey = Jwts.SIG.HS256.key().build();
-	}
+  @PostConstruct
+  public void init() throws Exception {
+    this.secretKey = Jwts.SIG.HS256.key().build();
+  }
 
-	public SecretKey getSecretKey() {
-		return secretKey;
-	}
+  public SecretKey getSecretKey() {
+    return secretKey;
+  }
 
-	public String obtenerIdentificadorDelToken(String token) {
-		return getClaimFromToken(token, Claims::getSubject);
-	}
+  public String obtenerIdentificadorDelToken(String token) {
+    return getClaimFromToken(token, Claims::getSubject);
+  }
 
-	public Date ObtenerVencimientoDelToken(String token) {
-		return getClaimFromToken(token, Claims::getExpiration);
-	}
+  public Date ObtenerVencimientoDelToken(String token) {
+    return getClaimFromToken(token, Claims::getExpiration);
+  }
 
-	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-		return claimsResolver.apply(getAllClaimsFromToken(token));
-	}
+  public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+    return claimsResolver.apply(getAllClaimsFromToken(token));
+  }
 
-	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
-	}
+  private Claims getAllClaimsFromToken(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+  }
 
-	private Boolean aExpiradoElToken(String token) {
-		final Date expiration = ObtenerVencimientoDelToken(token);
-		return expiration.before(new Date());
-	}
+  private Boolean aExpiradoElToken(String token) {
+    final Date expiration = ObtenerVencimientoDelToken(token);
+    return expiration.before(new Date());
+  }
 
-	public String generarToken(UserDetails userDetails, Logable user) {
-		Map<String, Object> claims = new HashMap<>();
-		Map<String, Object> userMap = new HashMap<>();
-		if (user instanceof Medico medico) {
-			userMap.put("licencia", user.getIdentifier());
-			userMap.put("nombre", medico.getNombre());
-		} else if (user instanceof Paciente paciente) {
-			userMap.put("nss", user.getIdentifier());
-			userMap.put("nombre", paciente.getNombre());
-		}
-		claims.put("usuario", userMap);
-		return doGenerateToken(claims, userDetails.getUsername());
-	}
+  public String generarToken(UserDetails userDetails, Logable user) {
+    Map<String, Object> claims = new HashMap<>();
+    Map<String, Object> userMap = new HashMap<>();
+    if (user instanceof Medico medico) {
+      userMap.put("licencia", user.getIdentifier());
+      userMap.put("nombre", medico.getNombre());
+    } else if (user instanceof Paciente paciente) {
+      userMap.put("nss", user.getIdentifier());
+      userMap.put("nombre", paciente.getNombre());
+    }
+    claims.put("usuario", userMap);
+    return doGenerateToken(claims, userDetails.getUsername());
+  }
 
-	private String doGenerateToken(Map<String, Object> userClaims, String subject) {
-		SecretKey signingKey = Keys.hmacShaKeyFor(getSecretKey().getEncoded());
+  private String doGenerateToken(Map<String, Object> userClaims, String subject) {
+    SecretKey signingKey = Keys.hmacShaKeyFor(getSecretKey().getEncoded());
 
-		JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and().issuer("exampleIssuer").subject(subject).issuedAt(Date.from(Instant.now())).expiration(Date.from(Instant.now().plusSeconds(JWT_TOKEN_VALIDITY))).signWith(signingKey);
+    JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and()
+        .issuer("exampleIssuer").subject(subject).issuedAt(Date.from(Instant.now()))
+        .expiration(Date.from(Instant.now().plus(JWT_TOKEN_VALIDITY)))
+        .signWith(signingKey, Jwts.SIG.HS256);
 
-		userClaims.entrySet().forEach(entry -> builder.claim(entry.getKey(), entry.getValue()));
+    userClaims.forEach(builder::claim);
 
-		return builder.compact();
-	}
+    return builder.compact();
+  }
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername()) && !aExpiradoElToken(token));
-	}
+  public Boolean validateToken(String token, UserDetails userDetails) {
+    return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername())
+        && !aExpiradoElToken(token));
+  }
 }

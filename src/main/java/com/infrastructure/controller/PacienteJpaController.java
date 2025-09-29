@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.controller;
 
@@ -33,38 +34,38 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/pacientes")
 public class PacienteJpaController {
 
-	private final ServicioPaciente sPaciente;
+  private final ServicioPaciente sPaciente;
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Void> aniadirPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
-		sPaciente.savePaciente(pacienteDTO);
-		URI location = URI.create("/pacientes/" + pacienteDTO.nss());
-		return ResponseEntity.created(location).build();
-	}
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public ResponseEntity<Void> aniadirPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
+    sPaciente.savePaciente(pacienteDTO);
+    URI location = URI.create("/pacientes/" + pacienteDTO.nss());
+    return ResponseEntity.created(location).build();
+  }
 
-	@DeleteMapping("/{nSS}")
-	public ResponseEntity<Void> eliminarPaciente(@PathVariable String nSS) {
-		sPaciente.eliminarPaciente(nSS);
-		return ResponseEntity.noContent().build();
-	}
+  @DeleteMapping("/{nSS}")
+  public ResponseEntity<Void> eliminarPaciente(@PathVariable String nSS) {
+    sPaciente.eliminarPaciente(nSS);
+    return ResponseEntity.noContent().build();
+  }
 
-	@GetMapping
-	public ResponseEntity<List<PacienteDTO>> listPacientes() {
-		return ResponseEntity.ok(sPaciente.buscarTodosP());
-	}
+  @GetMapping
+  public ResponseEntity<List<PacienteDTO>> listPacientes() {
+    return ResponseEntity.ok(sPaciente.buscarTodosP());
+  }
 
-	@GetMapping("/{nSS}")
-	public ResponseEntity<PacienteDTO> buscarPaciente(@RequestParam String nSS) {
-		PacienteDTO dto = sPaciente.buscarPaciente(nSS);
-		if (dto == null) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(dto);
-	}
+  @GetMapping("/{nSS}")
+  public ResponseEntity<PacienteDTO> buscarPaciente(@RequestParam String nSS) {
+    PacienteDTO dto = sPaciente.buscarPaciente(nSS);
+    if (dto == null) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(dto);
+  }
 
-	@GetMapping("/{nLicencia}/pacientes")
-	public ResponseEntity<List<PacienteDTO>> buscarPacienteXMedico(@PathVariable String nLicencia) {
-		return ResponseEntity.ok(sPaciente.buscarPacientesXMedico(nLicencia));
-	}
+  @GetMapping("/{nLicencia}/pacientes")
+  public ResponseEntity<List<PacienteDTO>> buscarPacienteXMedico(@PathVariable String nLicencia) {
+    return ResponseEntity.ok(sPaciente.buscarPacientesXMedico(nLicencia));
+  }
 }

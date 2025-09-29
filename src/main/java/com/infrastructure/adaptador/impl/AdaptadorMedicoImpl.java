@@ -24,60 +24,66 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AdaptadorMedicoImpl implements AdaptadorMedico {
 
-	private final MappersMedico mapperMedico;
+  private final MappersMedico mapperMedico;
 
-	private final MedicoRepository medicoRepository;
+  private final MedicoRepository medicoRepository;
 
-	private final HospitalRepository hospitalRepository;
+  private final HospitalRepository hospitalRepository;
 
-	private final BCryptPasswordEncoder passwordEncoder;
+  private final BCryptPasswordEncoder passwordEncoder;
 
-	@Override
-	public List<MedicoDTO> buscarTodosM(Pageable pageable) {
-		return medicoRepository.findAll(pageable).stream().map(medico -> mapperMedico.toDTOMedico(medico)).toList();
-	}
+  @Override
+  public List<MedicoDTO> buscarTodosM(Pageable pageable) {
+    return medicoRepository.findAll(pageable).stream().map(mapperMedico::toDTOMedico).toList();
+  }
 
-	@Override
-	public String saveMedico(MedicoDTO dto) {
-		Medico medico = mapperMedico.toEntityMedico(dto);
-		medico.setPassword(passwordEncoder.encode(medico.getPassword()));
-		return medicoRepository.save(medico).getNumLicencia();
-	}
+  @Override
+  public String saveMedico(MedicoDTO dto) {
+    Medico medico = mapperMedico.toEntityMedico(dto);
+    medico.setPassword(passwordEncoder.encode(medico.getPassword()));
+    return medicoRepository.save(medico).getNumLicencia();
+  }
 
-	@Override
-	public void eliminarMedico(String nLicencia) {
-		if (!medicoRepository.existsById(nLicencia)) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de Licencia no existe");
-		}
-		medicoRepository.deleteById(nLicencia);
-	}
+  @Override
+  public void eliminarMedico(String nLicencia) {
+    if (!medicoRepository.existsById(nLicencia)) {
+      throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El número de Licencia no existe");
+    }
+    medicoRepository.deleteById(nLicencia);
+  }
 
-	@Override
-	public MedicoDTO buscarMedico(String nLicencia) {
-		return mapperMedico.toDTOMedico(medicoRepository.findById(nLicencia).orElse(null));
-	}
+  @Override
+  public MedicoDTO buscarMedico(String nLicencia) {
+    return mapperMedico.toDTOMedico(medicoRepository.findById(nLicencia).orElse(null));
+  }
 
-	@Override
-	public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long idHospital) throws ExcepcionServicio {
-		hospitalRepository.findById(idHospital).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El hospital no existe"));
-		List<MedicoDTO> listaMedicoDTO = medicoRepository.findByEspecialidadAndHospitalId(especialidad, idHospital).stream().map(mapperMedico::toDTOMedico).toList();
-		if (listaMedicoDTO.isEmpty()) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos con esa especialidad");
-		}
-		return listaMedicoDTO;
-	}
+  @Override
+  public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long idHospital)
+      throws ExcepcionServicio {
+    hospitalRepository.findById(idHospital)
+        .orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El hospital no existe"));
+    List<MedicoDTO> listaMedicoDTO =
+        medicoRepository.findByEspecialidadAndHospitalId(especialidad, idHospital).stream()
+            .map(mapperMedico::toDTOMedico).toList();
+    if (listaMedicoDTO.isEmpty()) {
+      throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos con esa especialidad");
+    }
+    return listaMedicoDTO;
+  }
 
-	@Override
-	public Page<MedicoDTO> buscarMedicosXHospital(long idHospital, Pageable pageable) {
-		Page<Medico> pageMedicos = medicoRepository.findByHospitalId(idHospital, pageable);
-		if (pageMedicos.isEmpty()) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos en el hospital");
-		}
-		return pageMedicos.map(mapperMedico::toDTOMedico);
-	}
+  @Override
+  public Page<MedicoDTO> buscarMedicosXHospital(long idHospital, Pageable pageable) {
+    Page<Medico> pageMedicos = medicoRepository.findByHospitalId(idHospital, pageable);
+    if (pageMedicos.isEmpty()) {
+      throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "No hay medicos en el hospital");
+    }
+    return pageMedicos.map(mapperMedico::toDTOMedico);
+  }
 
-	@Override
-	public MedicoDTO buscarMiMedico(String nSS) {
-		return mapperMedico.toDTOMedico(medicoRepository.buscarMmedico(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "Paciente con NSS no existe o no tiene citas")));
-	}
+  @Override
+  public MedicoDTO buscarMiMedico(String nSS) {
+    return mapperMedico.toDTOMedico(medicoRepository.buscarMmedico(nSS)
+        .orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND,
+            "Paciente con NSS no existe o no tiene citas")));
+  }
 }

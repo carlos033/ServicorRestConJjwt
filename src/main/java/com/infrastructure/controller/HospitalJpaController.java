@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.controller;
 
@@ -31,33 +32,34 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/hospitales")
 public class HospitalJpaController {
 
-	private ServicioHospita sHospital;
+  private ServicioHospita sHospital;
 
-	@PostMapping
-	public ResponseEntity<HospitalDTO> aniadirHospital(@Valid @RequestBody HospitalDTO hospitalDto) {
-		long id = sHospital.save(hospitalDto);
-		URI location = URI.create("/hospitales/" + id);
+  @PostMapping
+  public ResponseEntity<HospitalDTO> aniadirHospital(@Valid @RequestBody HospitalDTO hospitalDto) {
+    long id = sHospital.save(hospitalDto);
+    URI location = URI.create("/hospitales/" + id);
 
-		return ResponseEntity.created(location).build();
-	}
+    return ResponseEntity.created(location).build();
+  }
 
-	@DeleteMapping("/{nombre}")
-	public ResponseEntity<Void> eliminarHospital(@PathVariable long id) throws ExcepcionServicio {
-		sHospital.eliminarHospital(id);
-		return ResponseEntity.noContent().build();
-	}
+  @DeleteMapping("/{nombre}")
+  public ResponseEntity<Void> eliminarHospital(@PathVariable long id) throws ExcepcionServicio {
+    sHospital.eliminarHospital(id);
+    return ResponseEntity.noContent().build();
+  }
 
-	@GetMapping
-	public ResponseEntity<List<HospitalDTO>> listarhospitales() {
-		return ResponseEntity.ok(sHospital.buscarTodosH());
-	}
+  @GetMapping
+  public ResponseEntity<List<HospitalDTO>> listarhospitales() {
+    return ResponseEntity.ok(sHospital.buscarTodosH());
+  }
 
-	@GetMapping("{nombre}")
-	public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable long id) throws ExcepcionServicio {
-		HospitalDTO dto = sHospital.buscarHospital(id);
-		if (dto == null) {
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.ok(dto);
-	}
+  @GetMapping("{nombre}")
+  public ResponseEntity<HospitalDTO> buscarHospital(@PathVariable long id)
+      throws ExcepcionServicio {
+    HospitalDTO dto = sHospital.buscarHospital(id);
+    if (dto == null) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(dto);
+  }
 }

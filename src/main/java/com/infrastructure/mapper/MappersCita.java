@@ -12,13 +12,14 @@ import com.domain.model.Cita;
 @Mapper(componentModel = "spring")
 public interface MappersCita {
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "fechaCita", source = "fechaCita")
-	@Mapping(target = "id", source = "id")
-	@Mapping(target = "medico.numLicencia", source = "medico.numLicencia")
-	@Mapping(target = "paciente.nss", source = "paciente.nss")
-	CitaDTO toDTOCita(Cita cita);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "fechaCita", source = "fechaCita")
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "medico.numLicencia", source = "medico.numLicencia")
+  @Mapping(target = "paciente.nss", source = "paciente.nss")
+  CitaDTO toDTOCita(Cita cita);
 
-	@InheritInverseConfiguration
-	Cita toEntityCita(CitaDTO dto);
+  @InheritInverseConfiguration
+  Cita toEntityCita(CitaDTO dto);
 }

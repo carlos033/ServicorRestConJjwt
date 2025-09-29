@@ -31,36 +31,40 @@ import lombok.AllArgsConstructor;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-	private final JwtToken jwtTokenUtil;
-	private final ServiciosJwtUsuarios jwtUserDetailsService;
+  private final JwtToken jwtTokenUtil;
+  private final ServiciosJwtUsuarios jwtUserDetailsService;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		final Optional<String> optAuthHeader = Optional.ofNullable(request.getHeader("Authorization"));
-		if (optAuthHeader.isPresent() && optAuthHeader.get().startsWith("Bearer ")) {
-			String jwtToken = optAuthHeader.get().substring(7);
-			try {
-				String identifier = jwtTokenUtil.obtenerIdentificadorDelToken(jwtToken);
-				if (identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-					UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identifier);
-					UsernamePasswordAuthenticationToken authToken = buildAuthenticationToken(userDetails, request);
-					SecurityContextHolder.getContext().setAuthentication(authToken);
-				}
-			} catch (JwtException exception) {
-				logger.error("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
-				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-				response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
-			}
-		}
-		chain.doFilter(request, response);
-	}
+  @Override
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+      FilterChain chain) throws ServletException, IOException {
+    final Optional<String> optAuthHeader = Optional.ofNullable(request.getHeader("Authorization"));
+    if (optAuthHeader.isPresent() && optAuthHeader.get().startsWith("Bearer ")) {
+      String jwtToken = optAuthHeader.get().substring(7);
+      try {
+        String identifier = jwtTokenUtil.obtenerIdentificadorDelToken(jwtToken);
+        if (identifier != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+          UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identifier);
+          UsernamePasswordAuthenticationToken authToken =
+              buildAuthenticationToken(userDetails, request);
+          SecurityContextHolder.getContext().setAuthentication(authToken);
+        }
+      } catch (JwtException exception) {
+        logger.error("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
+      }
+    }
+    chain.doFilter(request, response);
+  }
 
-	private UsernamePasswordAuthenticationToken buildAuthenticationToken(UserDetails userDetails, HttpServletRequest request) {
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+  private UsernamePasswordAuthenticationToken buildAuthenticationToken(UserDetails userDetails,
+      HttpServletRequest request) {
+    UsernamePasswordAuthenticationToken authenticationToken =
+        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-		authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-		return authenticationToken;
-	}
+    return authenticationToken;
+  }
 }

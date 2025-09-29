@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.controller;
 
@@ -31,39 +32,39 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/citas")
 public class CitasJpaController {
 
-	private final ServicioCita sCita;
+  private final ServicioCita sCita;
 
-	@GetMapping()
-	public ResponseEntity<List<CitaDTO>> listarCitas() {
-		return ResponseEntity.ok(sCita.buscarTodasC());
-	}
+  @GetMapping()
+  public ResponseEntity<List<CitaDTO>> listarCitas() {
+    return ResponseEntity.ok(sCita.buscarTodasC());
+  }
 
-	@PostMapping
-	public ResponseEntity<CitaDTO> aniadirCita(@Valid @RequestBody CitaDTO citaDto) {
-		long id = sCita.crearCita(citaDto);
-		URI location = URI.create("/citas/" + id);
-		return ResponseEntity.created(location).build();
-	}
+  @PostMapping
+  public ResponseEntity<CitaDTO> aniadirCita(@Valid @RequestBody CitaDTO citaDto) {
+    long id = sCita.crearCita(citaDto);
+    URI location = URI.create("/citas/" + id);
+    return ResponseEntity.created(location).build();
+  }
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> eliminarCita(@PathVariable long id) throws ExcepcionServicio {
-		sCita.eliminarCita(id);
-		return ResponseEntity.noContent().build();
-	}
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> eliminarCita(@PathVariable long id) throws ExcepcionServicio {
+    sCita.eliminarCita(id);
+    return ResponseEntity.noContent().build();
+  }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<CitaDTO> buscarXId(@PathVariable long id) throws ExcepcionServicio {
-		return ResponseEntity.ok(sCita.buscarXId(id));
-	}
+  @GetMapping("/{id}")
+  public ResponseEntity<CitaDTO> buscarXId(@PathVariable long id) throws ExcepcionServicio {
+    return ResponseEntity.ok(sCita.buscarXId(id));
+  }
 
-	@GetMapping("/medico//{nLicencia}")
-	public ResponseEntity<List<CitaDTO>> buscarCitaXMedico(@PathVariable String nLicencia) {
-		return ResponseEntity.ok(sCita.buscarXMedico(nLicencia));
+  @GetMapping("/medico//{nLicencia}")
+  public ResponseEntity<List<CitaDTO>> buscarCitaXMedico(@PathVariable String nLicencia) {
+    return ResponseEntity.ok(sCita.buscarXMedico(nLicencia));
 
-	}
+  }
 
-	@GetMapping("/citas/{nSS}")
-	public ResponseEntity<List<CitaDTO>> buscarCitasPaciente(@PathVariable String nSS) {
-		return ResponseEntity.ok(sCita.buscarXPaciente(nSS));
-	}
+  @GetMapping("/citas/{nSS}")
+  public ResponseEntity<List<CitaDTO>> buscarCitasPaciente(@PathVariable String nSS) {
+    return ResponseEntity.ok(sCita.buscarXPaciente(nSS));
+  }
 }

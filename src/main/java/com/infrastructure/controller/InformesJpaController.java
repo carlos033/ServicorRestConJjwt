@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.controller;
 
@@ -30,29 +31,29 @@ import lombok.AllArgsConstructor;
 @RequestMapping(path = "/informes")
 public class InformesJpaController {
 
-	private final ServicioInforme sInformes;
+  private final ServicioInforme sInformes;
 
-	@PostMapping
-	public ResponseEntity<InformeDTO> aniadirInforme(@Valid @RequestBody InformeDTO dTO) {
-		long id = sInformes.crearInforme(dTO);
-		URI location = URI.create("/medicos/" + id);
-		return ResponseEntity.created(location).build();
-	}
+  @PostMapping
+  public ResponseEntity<InformeDTO> aniadirInforme(@Valid @RequestBody InformeDTO dTO) {
+    long id = sInformes.crearInforme(dTO);
+    URI location = URI.create("/medicos/" + id);
+    return ResponseEntity.created(location).build();
+  }
 
-	@DeleteMapping("/{nombre}")
-	public ResponseEntity<Void> eliminarInforme(@PathVariable long id) {
-		sInformes.eliminarInforme(id);
-		return ResponseEntity.noContent().build();
-	}
+  @DeleteMapping("/{nombre}")
+  public ResponseEntity<Void> eliminarInforme(@PathVariable long id) {
+    sInformes.eliminarInforme(id);
+    return ResponseEntity.noContent().build();
+  }
 
-	@GetMapping
-	public ResponseEntity<List<InformeDTO>> listInformes() {
-		return ResponseEntity.ok(sInformes.buscarTodosI());
-	}
+  @GetMapping
+  public ResponseEntity<List<InformeDTO>> listInformes() {
+    return ResponseEntity.ok(sInformes.buscarTodosI());
+  }
 
-	@GetMapping("/{nSS}/informes")
-	public ResponseEntity<List<InformeDTO>> buscarInformesXPaciente(@PathVariable String nSS) {
-		return ResponseEntity.ok(sInformes.buscarInformesXPaciente(nSS));
-	}
+  @GetMapping("/{nSS}/informes")
+  public ResponseEntity<List<InformeDTO>> buscarInformesXPaciente(@PathVariable String nSS) {
+    return ResponseEntity.ok(sInformes.buscarInformesXPaciente(nSS));
+  }
 
 }

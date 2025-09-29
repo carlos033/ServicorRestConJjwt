@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.security;
 
@@ -35,49 +36,57 @@ import lombok.AllArgsConstructor;
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class WebSecurityConfig {
 
-	private final JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
+  private final JwtPuntoDAutentificacion jwtAuthenticationEntryPoint;
 
-	private final JwtRequestFilter jwtRequestFilter;
+  private final JwtRequestFilter jwtRequestFilter;
 
-	@Bean
-	BCryptPasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+  @Bean
+  BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-	@Bean
-	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-		return authenticationConfiguration.getAuthenticationManager();
-	}
+  @Bean
+  AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-	@Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf(AbstractHttpConfigurer::disable).cors(cors -> cors.configurationSource(corsConfigurationSource()))
-		        .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/autenticacion/login").permitAll().requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())
-		        .exceptionHandling(eh -> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint)).sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-		        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).build();
-	}
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST, "/autenticacion/login")
+            .permitAll().requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+            .permitAll().anyRequest().authenticated())
+        .exceptionHandling(eh -> eh.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class).build();
+  }
 
-	@Bean
-	CorsConfigurationSource corsConfigurationSource() {
-		final CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(List.of("*"));
-		configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-		configuration.setAllowCredentials(true);
-		configuration.setAllowedHeaders(List.of("*"));
-		configuration.setExposedHeaders(List.of("X-Auth-Token", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    final CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(List.of("*"));
+    configuration
+        .setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setExposedHeaders(List.of("X-Auth-Token", "Authorization",
+        "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
-	}
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
-	@Bean
-	OpenAPI customOpenAPI() {
-		return new OpenAPI().info(new Info().title("Servidor Medico").description("API para la gestion de hospitales").version("1.0"));
-	}
+  @Bean
+  OpenAPI customOpenAPI() {
+    return new OpenAPI().info(new Info().title("Servidor Medico")
+        .description("API para la gestion de hospitales").version("1.0"));
+  }
 
-	@Bean
-	GroupedOpenApi customApiDocs() {
-		return GroupedOpenApi.builder().group("Tu grupo de API").pathsToMatch("/**").build();
-	}
+  @Bean
+  GroupedOpenApi customApiDocs() {
+    return GroupedOpenApi.builder().group("Tu grupo de API").pathsToMatch("/**").build();
+  }
 }

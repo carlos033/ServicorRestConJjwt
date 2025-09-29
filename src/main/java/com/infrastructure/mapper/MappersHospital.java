@@ -14,22 +14,24 @@ import com.domain.model.Medico;
 @Mapper(componentModel = "spring")
 public interface MappersHospital {
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "id", source = "id")
-	@Mapping(target = "nombreHos", source = "nombreHos")
-	@Mapping(target = "poblacion", source = "poblacion")
-	@Mapping(target = "numConsultas", source = "numConsultas")
-	@Mapping(target = "listaMedicos", source = "listaMedicos")
-	HospitalDTO toDTOHospital(Hospital entity);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "nombreHos", source = "nombreHos")
+  @Mapping(target = "poblacion", source = "poblacion")
+  @Mapping(target = "numConsultas", source = "numConsultas")
+  @Mapping(target = "listaMedicos", source = "listaMedicos")
+  HospitalDTO toDTOHospital(Hospital entity);
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "numLicencia", source = "numLicencia")
-	MedicoDTO toDTOMedico(Medico paciente);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "numLicencia", source = "numLicencia")
+  MedicoDTO toDTOMedico(Medico paciente);
 
-	@InheritInverseConfiguration
-	Hospital toEntityHospital(HospitalDTO dto);
+  @InheritInverseConfiguration
+  Hospital toEntityHospital(HospitalDTO dto);
 
-	@InheritInverseConfiguration
-	Medico toEntityPaciente(MedicoDTO dto);
+  @InheritInverseConfiguration
+  Medico toEntityPaciente(MedicoDTO dto);
 
 }

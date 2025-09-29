@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.controller;
 
@@ -38,45 +39,47 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/autenticacion")
 public class AutenticacionController {
 
-	private final AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-	private final JwtToken jwtToken;
+  private final JwtToken jwtToken;
 
-	private final ServiciosJwtUsuarios jwtUserDetailsService;
+  private final ServiciosJwtUsuarios jwtUserDetailsService;
 
-	private final ServiciosMedico sMedico;
+  private final ServiciosMedico sMedico;
 
-	private final ServiciosPaciente sPaciente;
+  private final ServiciosPaciente sPaciente;
 
-	@PostMapping("/login")
-	public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginRequest request) throws Exception {
-		String identificador = request.identificador().toLowerCase();
-		String password = request.password();
-		authenticate(identificador, password);
-		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identificador);
+  @PostMapping("/login")
+  public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody LoginRequest request)
+      throws Exception {
+    String identificador = request.identificador().toLowerCase();
+    String password = request.password();
+    authenticate(identificador, password);
+    final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(identificador);
 
-		String token = generateToken(identificador, userDetails);
+    String token = generateToken(identificador, userDetails);
 
-		return ResponseEntity.ok(new JwtResponse(token));
-	}
+    return ResponseEntity.ok(new JwtResponse(token));
+  }
 
-	private String generateToken(String identificador, UserDetails userDetails) {
-		if (identificador.toUpperCase().startsWith("M")) {
-			return jwtToken.generarToken(userDetails, sMedico.buscarMedico(identificador));
-		} else if (identificador.toUpperCase().startsWith("ES")) {
-			return jwtToken.generarToken(userDetails, sPaciente.buscarPaciente(identificador));
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador no válido");
-		}
-	}
+  private String generateToken(String identificador, UserDetails userDetails) {
+    if (identificador.toUpperCase().startsWith("M")) {
+      return jwtToken.generarToken(userDetails, sMedico.buscarMedico(identificador));
+    } else if (identificador.toUpperCase().startsWith("ES")) {
+      return jwtToken.generarToken(userDetails, sPaciente.buscarPaciente(identificador));
+    } else {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Identificador no válido");
+    }
+  }
 
-	private void authenticate(String username, String password) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario deshabilitado");
-		} catch (BadCredentialsException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credenciales inválidas");
-		}
-	}
+  private void authenticate(String username, String password) throws Exception {
+    try {
+      authenticationManager
+          .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+    } catch (DisabledException e) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Usuario deshabilitado");
+    } catch (BadCredentialsException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Credenciales inválidas");
+    }
+  }
 }

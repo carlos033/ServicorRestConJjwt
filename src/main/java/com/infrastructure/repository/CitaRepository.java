@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.repository;
 
@@ -20,14 +21,16 @@ import com.domain.model.Cita;
  */
 public interface CitaRepository extends JpaRepository<Cita, Long> {
 
-	@EntityGraph(attributePaths = { "paciente", "medico" })
-	@Query("Select c from Cita c where c.paciente.nss= :nss")
-	List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
+  @EntityGraph(attributePaths = {"paciente", "medico"})
+  @Query("Select c from Cita c where c.paciente.nss= :nss")
+  List<Cita> buscarCitaXPaciente(@Param("nss") String nSS);
 
-	List<Cita> findByMedicoNumLicencia(@Param("nLicencia") String nLicencia);
+  List<Cita> findByMedicoNumLicencia(@Param("nLicencia") String nLicencia);
 
-	Optional<Cita> findByPacienteNssAndFechaCita(@Param("nss") String nSS, @Param("fecha") LocalDateTime fecha);
+  Optional<Cita> findByPacienteNssAndFechaCita(@Param("nss") String nSS,
+      @Param("fecha") LocalDateTime fecha);
 
-	Optional<Cita> findByMedicoNumLicenciaAndFechaCita(@Param("nLicencia") String nLicencia, @Param("fecha") LocalDateTime fecha);
+  Optional<Cita> findByMedicoNumLicenciaAndFechaCita(@Param("nLicencia") String nLicencia,
+      @Param("fecha") LocalDateTime fecha);
 
 }

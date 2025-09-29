@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.repository;
 
@@ -17,7 +18,7 @@ import com.domain.model.Informe;
 
 public interface InformeRepository extends JpaRepository<Informe, Long> {
 
-	List<Informe> findByPacienteNss(@Param("nSS") String nSS);
+  List<Informe> findByPacienteNss(@Param("nSS") String nSS);
 
-	List<Informe> findByMedicoNumLicencia(@Param("nLicencia") String nLicencia);
+  List<Informe> findByMedicoNumLicencia(@Param("nLicencia") String nLicencia);
 }

@@ -16,35 +16,38 @@ import com.domain.model.Medico;
 @Mapper(componentModel = "spring")
 public interface MappersMedico {
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "consulta", source = "consulta")
-	@Mapping(target = "listaInformes", source = "listaInformes")
-	@Mapping(target = "listaCitas", source = "listaCitas")
-	@Mapping(target = "especialidad", source = "especialidad")
-	@Mapping(target = "hospital.id", source = "hospital.id")
-	@Mapping(target = "nombre", source = "nombre")
-	@Mapping(target = "numLicencia", source = "numLicencia")
-	@Mapping(target = "password", source = "password")
-	MedicoDTO toDTOMedico(Medico paciente);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "consulta", source = "consulta")
+  @Mapping(target = "listaInformes", source = "listaInformes")
+  @Mapping(target = "listaCitas", source = "listaCitas")
+  @Mapping(target = "especialidad", source = "especialidad")
+  @Mapping(target = "hospital.id", source = "hospital.id")
+  @Mapping(target = "nombre", source = "nombre")
+  @Mapping(target = "numLicencia", source = "numLicencia")
+  @Mapping(target = "password", source = "password")
+  MedicoDTO toDTOMedico(Medico paciente);
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "nombreInf", source = "nombreInf")
-	@Mapping(target = "url", source = "url")
-	@Mapping(target = "paciente.nss", source = "paciente.nss")
-	InformeDTO toDTOInforme(Informe informe);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "nombreInf", source = "nombreInf")
+  @Mapping(target = "url", source = "url")
+  @Mapping(target = "paciente.nss", source = "paciente.nss")
+  InformeDTO toDTOInforme(Informe informe);
 
-	@BeanMapping(ignoreByDefault = true, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-	@Mapping(target = "fechaCita", source = "fechaCita")
-	@Mapping(target = "id", source = "id")
-	@Mapping(target = "paciente.nss", source = "paciente.nss")
-	CitaDTO toDTOCita(Cita cita);
+  @BeanMapping(ignoreByDefault = true,
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  @Mapping(target = "fechaCita", source = "fechaCita")
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "paciente.nss", source = "paciente.nss")
+  CitaDTO toDTOCita(Cita cita);
 
-	@InheritInverseConfiguration
-	Medico toEntityMedico(MedicoDTO dto);
+  @InheritInverseConfiguration
+  Medico toEntityMedico(MedicoDTO dto);
 
-	@InheritInverseConfiguration
-	Informe toEntityInforme(InformeDTO dto);
+  @InheritInverseConfiguration
+  Informe toEntityInforme(InformeDTO dto);
 
-	@InheritInverseConfiguration
-	Cita toEntityCita(CitaDTO dto);
+  @InheritInverseConfiguration
+  Cita toEntityCita(CitaDTO dto);
 }

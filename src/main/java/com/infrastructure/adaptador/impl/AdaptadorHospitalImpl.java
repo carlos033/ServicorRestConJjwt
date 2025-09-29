@@ -20,31 +20,32 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class AdaptadorHospitalImpl implements AdaptadorHospital {
 
-	private final HospitalRepository repositorioH;
+  private final HospitalRepository repositorioH;
 
-	private final MappersHospital mapperHospital;
+  private final MappersHospital mapperHospital;
 
-	@Override
-	public List<HospitalDTO> buscarTodosH() {
-		return repositorioH.findAll().stream().map(hospital -> mapperHospital.toDTOHospital(hospital)).toList();
-	}
+  @Override
+  public List<HospitalDTO> buscarTodosH() {
+    return repositorioH.findAll().stream().map(mapperHospital::toDTOHospital).toList();
+    
+  }
 
-	@Override
-	public long save(HospitalDTO dto) {
-		Hospital hospital = mapperHospital.toEntityHospital(dto);
-		return repositorioH.save(hospital).getId();
-	}
+  @Override
+  public long save(HospitalDTO dto) {
+    Hospital hospital = mapperHospital.toEntityHospital(dto);
+    return repositorioH.save(hospital).getId();
+  }
 
-	@Override
-	public void eliminarHospital(long id) {
-		if (!repositorioH.existsById(id)) {
-			throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El ide de ese hospital no existe");
-		}
-		repositorioH.deleteById(id);
-	}
+  @Override
+  public void eliminarHospital(long id) {
+    if (!repositorioH.existsById(id)) {
+      throw new ExcepcionServicio(HttpStatus.NOT_FOUND, "El ide de ese hospital no existe");
+    }
+    repositorioH.deleteById(id);
+  }
 
-	@Override
-	public HospitalDTO buscarHospital(long id) throws ExcepcionServicio {
-		return mapperHospital.toDTOHospital(repositorioH.findById(id).orElse(null));
-	}
+  @Override
+  public HospitalDTO buscarHospital(long id) throws ExcepcionServicio {
+    return mapperHospital.toDTOHospital(repositorioH.findById(id).orElse(null));
+  }
 }

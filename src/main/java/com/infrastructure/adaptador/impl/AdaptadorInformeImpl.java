@@ -24,43 +24,50 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class AdaptadorInformeImpl implements AdaptadorInforme {
 
-	private final MappersInforme mapperInforme;
+  private final MappersInforme mapperInforme;
 
-	private final InformeRepository informeRepository;
+  private final InformeRepository informeRepository;
 
-	private final PacienteRepository pacienteRepository;
+  private final PacienteRepository pacienteRepository;
 
-	private final MedicoRepository medicoRepository;
+  private final MedicoRepository medicoRepository;
 
-	@Override
-	public List<InformeDTO> buscarTodosI() {
-		return informeRepository.findAll().stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
-	}
+  @Override
+  public List<InformeDTO> buscarTodosI() {
+    return informeRepository.findAll().stream().map(mapperInforme::toDTOInforme).toList();
+  }
 
-	@Override
-	public void eliminarInforme(long id) {
-		informeRepository.findById(id).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El informe no existe"));
-		informeRepository.deleteById(id);
-	}
+  @Override
+  public void eliminarInforme(long id) {
+    Informe informe = informeRepository.findById(id)
+        .orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El informe no existe"));
+    informeRepository.delete(informe);
+  }
 
-	@Override
-	public List<InformeDTO> buscarInformesXPaciente(String nSS) {
-		pacienteRepository.findById(nSS).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
-		return informeRepository.findByPacienteNss(nSS).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
-	}
+  @Override
+  public List<InformeDTO> buscarInformesXPaciente(String nSS) {
+    Paciente paciente = pacienteRepository.findById(nSS).orElseThrow(
+        () -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
+    return informeRepository.findByPacienteNss(paciente.getNss()).stream()
+        .map(mapperInforme::toDTOInforme).toList();
+  }
 
-	@Override
-	public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
-		medicoRepository.findById(nLicencia).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
-		return informeRepository.findByMedicoNumLicencia(nLicencia).stream().map(informe -> mapperInforme.toDTOInforme(informe)).toList();
-	}
+  @Override
+  public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
+    medicoRepository.findById(nLicencia).orElseThrow(
+        () -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
+    return informeRepository.findByMedicoNumLicencia(nLicencia).stream()
+        .map(mapperInforme::toDTOInforme).toList();
+  }
 
-	@Override
-	public long crearInforme(InformeDTO dto) {
-		Medico medico = medicoRepository.findById(dto.medico().numLicencia()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
-		Paciente paciente = pacienteRepository.findById(dto.paciente().nss()).orElseThrow(() -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
-		Informe entity = mapperInforme.toEntityInforme(dto, paciente, medico);
-		informeRepository.save(entity);
-		return entity.getId();
-	}
+  @Override
+  public long crearInforme(InformeDTO dto) {
+    Medico medico = medicoRepository.findById(dto.medico().numLicencia()).orElseThrow(
+        () -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de Licencia no existe"));
+    Paciente paciente = pacienteRepository.findById(dto.paciente().nss()).orElseThrow(
+        () -> new ExcepcionServicio(HttpStatus.NOT_FOUND, "El numero de SS no existe"));
+    Informe entity = mapperInforme.toEntityInforme(dto, paciente, medico);
+    informeRepository.save(entity);
+    return entity.getId();
+  }
 }
