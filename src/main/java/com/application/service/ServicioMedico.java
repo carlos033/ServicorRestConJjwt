@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service;
 
@@ -16,18 +17,18 @@ import com.domain.dto.MedicoDTO;
  */
 public interface ServicioMedico {
 
-	String saveMedico(MedicoDTO dto);
+  String saveMedico(MedicoDTO dto);
 
-	void eliminarMedico(String nLicencia);
+  void eliminarMedico(String nLicencia);
 
-	MedicoDTO buscarMedico(String nLicencia);
+  MedicoDTO buscarMedico(String nLicencia);
 
-	List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long hospital);
+  List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long hospital);
 
-	Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable);
+  Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable);
 
-	MedicoDTO buscarMiMedico(String nSS);
+  MedicoDTO buscarMiMedico(String nSS);
 
-	List<MedicoDTO> buscarTodosM(Pageable pageable);
+  List<MedicoDTO> buscarTodosM(Pageable pageable);
 
 }

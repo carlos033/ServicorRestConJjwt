@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service;
 
@@ -14,16 +15,16 @@ import com.domain.exception.ExcepcionServicio;
  */
 public interface ServicioCita {
 
-	List<CitaDTO> buscarTodasC();
+  List<CitaDTO> buscarTodasC();
 
-	List<CitaDTO> buscarXPaciente(String nSS) throws ExcepcionServicio;
+  List<CitaDTO> buscarXPaciente(String nSS) throws ExcepcionServicio;
 
-	List<CitaDTO> buscarXMedico(String nLicencia) throws ExcepcionServicio;
+  List<CitaDTO> buscarXMedico(String nLicencia) throws ExcepcionServicio;
 
-	void eliminarCita(long id) throws ExcepcionServicio;
+  void eliminarCita(long id) throws ExcepcionServicio;
 
-	CitaDTO buscarXId(long id) throws ExcepcionServicio;
+  CitaDTO buscarXId(long id) throws ExcepcionServicio;
 
-	long crearCita(CitaDTO dto) throws ExcepcionServicio;
+  long crearCita(CitaDTO dto) throws ExcepcionServicio;
 
 }

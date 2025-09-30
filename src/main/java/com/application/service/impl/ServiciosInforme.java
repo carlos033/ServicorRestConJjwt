@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service.impl;
 
@@ -21,32 +22,32 @@ import lombok.AllArgsConstructor;
 @Service
 public class ServiciosInforme implements ServicioInforme {
 
-	private final AdaptadorInformeImpl adaptador;
+  private final AdaptadorInformeImpl adaptador;
 
-	@Override
-	public List<InformeDTO> buscarTodosI() {
-		return adaptador.buscarTodosI();
-	}
+  @Override
+  public List<InformeDTO> buscarTodosI() {
+    return adaptador.buscarTodosI();
+  }
 
-	@Override
-	public void eliminarInforme(long id) {
-		adaptador.eliminarInforme(id);
-	}
+  @Override
+  public void eliminarInforme(long id) {
+    adaptador.eliminarInforme(id);
+  }
 
-	@Override
+  @Override
 
-	public List<InformeDTO> buscarInformesXPaciente(String nSS) {
-		return adaptador.buscarInformesXPaciente(nSS);
-	}
+  public List<InformeDTO> buscarInformesXPaciente(String nSS) {
+    return adaptador.buscarInformesXPaciente(nSS);
+  }
 
-	@Override
+  @Override
 
-	public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
-		return adaptador.buscarInformesXMedico(nLicencia);
-	}
+  public List<InformeDTO> buscarInformesXMedico(String nLicencia) {
+    return adaptador.buscarInformesXMedico(nLicencia);
+  }
 
-	@Override
-	public long crearInforme(InformeDTO dto) {
-		return adaptador.crearInforme(dto);
-	}
+  @Override
+  public long crearInforme(InformeDTO dto) {
+    return adaptador.crearInforme(dto);
+  }
 }

@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service.impl;
 
@@ -23,25 +24,25 @@ import lombok.AllArgsConstructor;
 @Transactional
 public class ServiciosHospital implements ServicioHospita {
 
-	private AdaptadorHospitalImpl adaptador;
+  private AdaptadorHospitalImpl adaptador;
 
-	@Override
-	public List<HospitalDTO> buscarTodosH() {
-		return adaptador.buscarTodosH();
-	}
+  @Override
+  public List<HospitalDTO> buscarTodosH() {
+    return adaptador.buscarTodosH();
+  }
 
-	@Override
-	public long save(HospitalDTO dto) {
-		return adaptador.save(dto);
-	}
+  @Override
+  public long save(HospitalDTO dto) {
+    return adaptador.save(dto);
+  }
 
-	@Override
-	public void eliminarHospital(long id) {
-		adaptador.eliminarHospital(id);
-	}
+  @Override
+  public void eliminarHospital(long id) {
+    adaptador.eliminarHospital(id);
+  }
 
-	@Override
-	public HospitalDTO buscarHospital(long id) {
-		return adaptador.buscarHospital(id);
-	}
+  @Override
+  public HospitalDTO buscarHospital(long id) {
+    return adaptador.buscarHospital(id);
+  }
 }

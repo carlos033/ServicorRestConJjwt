@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service.impl;
 
@@ -21,30 +22,30 @@ import lombok.AllArgsConstructor;
 @Service
 public class ServiciosPaciente implements ServicioPaciente {
 
-	private AdaptadorPacienteImpl adaptadorPaciente;
+  private AdaptadorPacienteImpl adaptadorPaciente;
 
-	@Override
-	public List<PacienteDTO> buscarTodosP() {
-		return adaptadorPaciente.buscarTodosP();
-	}
+  @Override
+  public List<PacienteDTO> buscarTodosP() {
+    return adaptadorPaciente.buscarTodosP();
+  }
 
-	@Override
-	public void eliminarPaciente(String nSS) {
-		adaptadorPaciente.eliminarPaciente(nSS);
-	}
+  @Override
+  public void eliminarPaciente(String nSS) {
+    adaptadorPaciente.eliminarPaciente(nSS);
+  }
 
-	@Override
-	public void savePaciente(PacienteDTO dto) {
-		adaptadorPaciente.savePaciente(dto);
-	}
+  @Override
+  public void savePaciente(PacienteDTO dto) {
+    adaptadorPaciente.savePaciente(dto);
+  }
 
-	@Override
-	public PacienteDTO buscarPaciente(String nSS) {
-		return adaptadorPaciente.buscarPaciente(nSS);
-	}
+  @Override
+  public PacienteDTO buscarPaciente(String nSS) {
+    return adaptadorPaciente.buscarPaciente(nSS);
+  }
 
-	@Override
-	public List<PacienteDTO> buscarPacientesXMedico(String nLicencia) {
-		return adaptadorPaciente.buscarPacientesXMedico(nLicencia);
-	}
+  @Override
+  public List<PacienteDTO> buscarPacientesXMedico(String nLicencia) {
+    return adaptadorPaciente.buscarPacientesXMedico(nLicencia);
+  }
 }

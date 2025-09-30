@@ -1,5 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.application.service.impl;
 
@@ -24,41 +25,42 @@ import lombok.AllArgsConstructor;
 @Service
 public class ServiciosMedico implements ServicioMedico {
 
-	private AdaptadorMedicoImpl adaptador;
+  private AdaptadorMedicoImpl adaptador;
 
-	@Override
-	public List<MedicoDTO> buscarTodosM(Pageable pageable) {
-		return adaptador.buscarTodosM(pageable);
-	}
+  @Override
+  public List<MedicoDTO> buscarTodosM(Pageable pageable) {
+    return adaptador.buscarTodosM(pageable);
+  }
 
-	@Override
-	public String saveMedico(MedicoDTO dto) {
-		return adaptador.saveMedico(dto);
-	}
+  @Override
+  public String saveMedico(MedicoDTO dto) {
+    return adaptador.saveMedico(dto);
+  }
 
-	@Override
-	public void eliminarMedico(String nLicencia) {
-		adaptador.eliminarMedico(nLicencia);
-	}
+  @Override
+  public void eliminarMedico(String nLicencia) {
+    adaptador.eliminarMedico(nLicencia);
+  }
 
-	@Override
-	public MedicoDTO buscarMedico(String nLicencia) {
-		return adaptador.buscarMedico(nLicencia);
-	}
+  @Override
+  public MedicoDTO buscarMedico(String nLicencia) {
+    return adaptador.buscarMedico(nLicencia);
+  }
 
-	@Override
-	public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long hospital) {
-		return adaptador.buscarMedicoXEspecialidad(especialidad, hospital);
-	}
+  @Override
+  public List<MedicoDTO> buscarMedicoXEspecialidad(String especialidad, long hospital) {
+    return adaptador.buscarMedicoXEspecialidad(especialidad, hospital);
+  }
 
-	@Override
-	public Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable) throws ExcepcionServicio {
-		return adaptador.buscarMedicosXHospital(hospital, pageable);
-	}
+  @Override
+  public Page<MedicoDTO> buscarMedicosXHospital(long hospital, Pageable pageable)
+      throws ExcepcionServicio {
+    return adaptador.buscarMedicosXHospital(hospital, pageable);
+  }
 
-	@Override
-	public MedicoDTO buscarMiMedico(String nSS) {
-		return adaptador.buscarMiMedico(nSS);
-	}
+  @Override
+  public MedicoDTO buscarMiMedico(String nSS) {
+    return adaptador.buscarMiMedico(nSS);
+  }
 
 }
