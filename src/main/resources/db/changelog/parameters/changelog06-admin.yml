@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 06
+      id: "6"
       author: Carlos
       changes:
         - insert:
@@ -17,7 +17,7 @@ databaseChangeLog:
                   value: 'Administrador'
               - column:
                   name: consulta
-                  value: 0				  
+                  valueNumeric: 0			  
               - column:
                   name: password
                   value: "$2a$10$X/BtsXv/PL9NPJyu7PLyN.k8z2wbHoKg288dYe45kQ4r80TNCpIUS"
