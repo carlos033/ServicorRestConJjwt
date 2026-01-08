@@ -29,9 +29,15 @@ public class JwtPuntoDAutentificacion implements AuthenticationEntryPoint, Seria
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException authException) throws IOException {
-    log.warn("Acceso no autorizado: {}", authException.getMessage());
+    log.warn("Intento de acceso no autorizado a {}", request.getRequestURI());
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    response.getWriter().write("{\"message\": \"No autorizado\"}");
+    response.getWriter().write("""
+          {
+          "title": "No autorizado",
+          "status": 401,
+          "detail": "Credenciales inválidas o token ausente"
+        }
+        """);
   }
 }

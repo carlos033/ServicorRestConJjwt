@@ -1,44 +1,45 @@
 logging:
-   level:
-      org:
-         springframework:
-            security: DEBUG   # 🔍 Logs detallados de Spring Security
-            web: DEBUG         # 🔍 Logs detallados de Spring Web
-         hibernate:
-            type: trace        # 🔍 Logs SQL con más detalles
-      liquibase: DEBUG         # 🔍 Logs de Liquibase
-
-server:
-   error:
-      include-message: always  # 🔥 Incluir detalles en las respuestas de error
-      include-stacktrace: always
-      include-binding-errors: always
-
+    level:
+        org:
+            springframework:
+                security: DEBUG # 🔍 Logs detallados de Spring Security
+                web: DEBUG # 🔍 Logs detallados de Spring Web
+            hibernate:
+                type: trace # 🔍 Logs SQL con más detalles
+        liquibase: DEBUG # 🔍 Logs de Liquibase
 spring:
-   jackson:
-      default-property-inclusion: non-null		
-   datasource:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/hospitaldb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true
-      username: root
-      password: ''
-      hikari:
-         maximum-pool-size: 10   # 🔥 Pool de conexiones más optimizado
-         minimum-idle: 5
-         idle-timeout: 30000
-         max-lifetime: 2000000
-         connection-timeout: 30000
+    web:
+        error:
+            include-message: always
+            include-stacktrace: always
+            include-binding-errors: always
+    jackson:
+        default-property-inclusion: non-null
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/hospitaldb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8&createDatabaseIfNotExist=true
+        username: root
+        password: ""
+        hikari:
+            maximum-pool-size: 10 # 🔥 Pool de conexiones más optimizado
+            minimum-idle: 5
+            idle-timeout: 30000
+            max-lifetime: 2000000
+            connection-timeout: 30000
 
-   jpa:
-      open-in-view: false      # 🔥 Evita problemas de Lazy Loading
-      hibernate:
-         ddl-auto: none        # 📌 No modificar la BD automáticamente
-      properties:
-         hibernate:
-            dialect: org.hibernate.dialect.MySQL8Dialect
- 
-   liquibase:
-      change-log: classpath:db/changelog/databaseChangeLog.yml
-      enabled: true
-      drop-first: false  # 🔥 Cambia a `true` si quieres limpiar la BD antes de aplicar cambios
+    jpa:
+        open-in-view: false # 🔥 Evita problemas de Lazy Loading
+        hibernate:
+            ddl-auto: none # 📌 No modificar la BD automáticamente
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQLDialect
 
+    liquibase:
+        change-log: classpath:db/changelog/databaseChangeLog.yml
+        enabled: true
+        drop-first: false # 🔥 Cambia a `true` si quieres limpiar la BD antes de aplicar cambios
+
+security:
+    jwt:
+        secret: "super-long-secret-key-with-at-least-32-bytes!" # 🔐 Clave secreta para JWT

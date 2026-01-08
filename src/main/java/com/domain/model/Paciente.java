@@ -13,8 +13,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -45,7 +43,6 @@ public class Paciente implements Serializable {
   private String password;
 
   @Column(name = "f_nacimiento", nullable = false)
-  @Temporal(TemporalType.DATE)
   private LocalDate fechaNacimiento;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "paciente")

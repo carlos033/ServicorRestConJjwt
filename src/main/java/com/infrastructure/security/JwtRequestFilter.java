@@ -1,21 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this template file, choose Tools | Templates and open the template in the editor.
+ * To change this license header, choose License Headers in Project Properties. To change this
+ * template file, choose Tools | Templates and open the template in the editor.
  */
 package com.infrastructure.security;
 
 import java.io.IOException;
 import java.util.Optional;
-
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.application.service.impl.ServiciosJwtUsuarios;
-
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -49,10 +46,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authToken);
         }
       } catch (JwtException exception) {
-        logger.error("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
+        logger.warn("No se pudo obtener el token JWT o el token JWT ha expirado", exception);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write("{\"error\": \"Token inválido o expirado\"}");
+        SecurityContextHolder.clearContext();
+        return;
       }
     }
     chain.doFilter(request, response);

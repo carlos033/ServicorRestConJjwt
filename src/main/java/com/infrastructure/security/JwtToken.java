@@ -1,13 +1,14 @@
 package com.infrastructure.security;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 import javax.crypto.SecretKey;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import com.domain.model.Logable;
@@ -17,7 +18,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 
 @Component
 public class JwtToken implements Serializable {
@@ -28,9 +28,8 @@ public class JwtToken implements Serializable {
 
   private SecretKey secretKey;
 
-  @PostConstruct
-  public void init() throws Exception {
-    this.secretKey = Jwts.SIG.HS256.key().build();
+  public JwtToken(@Value("${security.jwt.secret}") String secret) {
+    this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
   }
 
   public SecretKey getSecretKey() {
@@ -38,15 +37,16 @@ public class JwtToken implements Serializable {
   }
 
   public String obtenerIdentificadorDelToken(String token) {
-    return getClaimFromToken(token, Claims::getSubject);
+    return getAllClaimsFromToken(token).getSubject();
+  }
+
+  public Boolean validateToken(String token, UserDetails userDetails) {
+    return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername())
+        && !aExpiradoElToken(token));
   }
 
   public Date ObtenerVencimientoDelToken(String token) {
-    return getClaimFromToken(token, Claims::getExpiration);
-  }
-
-  public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-    return claimsResolver.apply(getAllClaimsFromToken(token));
+    return getAllClaimsFromToken(token).getExpiration();
   }
 
   private Claims getAllClaimsFromToken(String token) {
@@ -73,20 +73,20 @@ public class JwtToken implements Serializable {
   }
 
   private String doGenerateToken(Map<String, Object> userClaims, String subject) {
-    SecretKey signingKey = Keys.hmacShaKeyFor(getSecretKey().getEncoded());
+    Instant now = Instant.now();
 
-    JwtBuilder builder = Jwts.builder().audience().add("exampleAudience").and()
-        .issuer("exampleIssuer").subject(subject).issuedAt(Date.from(Instant.now()))
-        .expiration(Date.from(Instant.now().plus(JWT_TOKEN_VALIDITY)))
-        .signWith(signingKey, Jwts.SIG.HS256);
+    // Construcción del token
+    JwtBuilder builder = Jwts.builder().claim("sub", subject) // subject
+        .claim("iss", "exampleIssuer") // issuer
+        .claim("aud", "exampleAudience") // audience
+        .claim("iat", now.getEpochSecond()) // issued at
+        .claim("exp", now.plus(JWT_TOKEN_VALIDITY).getEpochSecond()) // expiration
+        .signWith(getSecretKey()); // clave ya contiene algoritmo
 
+    // Añadimos claims personalizados uno a uno
     userClaims.forEach(builder::claim);
 
     return builder.compact();
   }
 
-  public Boolean validateToken(String token, UserDetails userDetails) {
-    return (obtenerIdentificadorDelToken(token).equals(userDetails.getUsername())
-        && !aExpiradoElToken(token));
-  }
 }
